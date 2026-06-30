@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import { getPageHeader } from "@/lib/utils";

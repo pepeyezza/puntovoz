@@ -33,7 +33,7 @@ async function getResumen() {
         ? entrevistas.map((e) => ({ slug: e.slug, entrevistado: e.entrevistado, cargo: e.cargo ?? "", resumen: e.resumen, date: (e.publishedAt ?? e.createdAt).toLocaleDateString("es-AR") }))
         : ENTREVISTAS_DEMO,
       proyectos: proyectos.length
-        ? proyectos.map((p) => ({ nombre: p.nombre, area: p.area ?? "", estado: p.estado === "en_curso" ? "En curso" : p.estado === "finalizado" ? "Finalizado" : "Planificado" }))
+        ? proyectos.map((p) => ({ nombre: p.nombre, area: p.area ?? "", estado: p.tipo === "publico" ? "Público" : p.tipo === "privado" ? "Privado" : "Mixto" }))
         : PROYECTOS_DEMO,
       agenda: agenda.length
         ? agenda.map((ev) => ({ titulo: ev.titulo, fecha: ev.fecha.toLocaleDateString("es-AR"), lugar: ev.lugar ?? "" }))

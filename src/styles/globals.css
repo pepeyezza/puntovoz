@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-principal: #1c2a38;
+  --color-secundario: #f5f2eb;
+  --color-acento: #c87a62;
+  --color-joven: #f4a900;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-secundario);
+  color: var(--color-principal);
+}
+
+.dark body {
+  background-color: var(--color-principal);
+  color: var(--color-secundario);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Foco visible accesible */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: var(--font-sora);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.linea-acento {
+  height: 3px;
+  width: 2.5rem;
+  background: var(--color-joven);
+}
+
+/* Estilos del contenido enriquecido (Tiptap), usados tanto en el editor
+   admin como al renderizar el HTML guardado en las páginas públicas. */
+.prose-voz h2 {
+  font-family: var(--font-fraunces);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.prose-voz h3 {
+  font-family: var(--font-fraunces);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.prose-voz p {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+.prose-voz ul,
+.prose-voz ol {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+}
+.prose-voz ul {
+  list-style: disc;
+}
+.prose-voz ol {
+  list-style: decimal;
+}
+.prose-voz li {
+  margin: 0.25rem 0;
+}
+.prose-voz blockquote {
+  border-left: 3px solid var(--color-acento);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: rgba(28, 42, 56, 0.7);
+  font-style: italic;
+}
+.prose-voz a {
+  color: var(--color-acento);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.prose-voz strong {
+  font-weight: 700;
+}
+.prose-voz p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: rgba(28, 42, 56, 0.35);
+  float: left;
+  pointer-events: none;
+  height: 0;
+}

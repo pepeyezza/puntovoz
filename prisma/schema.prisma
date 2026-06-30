@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+  COLLABORATOR
+}
+
+enum PostType {
+  EDITORIAL
+  COLABORADOR
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(EDITOR)
+  bio       String?
+  photoUrl  String?
+  socials   Json?
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  subtitle    String?
+  slug        String     @unique
+  coverImage  String?
+  gallery     String[]
+  content     String
+  type        PostType   @default(EDITORIAL)
+  featured    Boolean    @default(false)
+  status      Status     @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id])
+
+  categories  Category[] @relation("PostCategories")
+  tags        Tag[]      @relation("PostTags")
+
+  related     Post[]     @relation("RelatedPosts")
+  relatedBy   Post[]     @relation("RelatedPosts")
+}
+
+model Audio {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  description String?
+  spotifyUrl  String
+  coverImage  String?
+  status      Status     @default(PUBLISHED)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+
+  categories  Category[] @relation("AudioCategories")
+}
+
+model Video {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  description String?
+  youtubeUrl  String
+  coverImage  String?
+  status      Status     @default(PUBLISHED)
+  publishedAt DateTime?
+  createdAt   DateTime   @default(now())
+
+  categories  Category[] @relation("VideoCategories")
+}
+
+model Category {
+  id    String  @id @default(cuid())
+  name  String
+  slug  String  @unique
+  posts Post[]  @relation("PostCategories")
+  audios Audio[] @relation("AudioCategories")
+  videos Video[] @relation("VideoCategories")
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String
+  slug  String @unique
+  posts Post[] @relation("PostTags")
+}
+
+// --- Observatorio de Chascomús ---
+
+model Indicador {
+  id        String   @id @default(cuid())
+  nombre    String
+  valor     Float
+  unidad    String
+  periodo   String   // ej: "2026-Q2"
+  categoria String?  // empleo, producción, demografía, etc.
+  fuente    String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}
+
+model Entrevista {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  entrevistado String
+  cargo        String?
+  resumen      String
+  contenido    String
+  audioUrl     String?
+  coverImage   String?
+  status       Status    @default(DRAFT)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model ProyectoLocal {
+  id          String   @id @default(cuid())
+  nombre      String
+  slug        String   @unique
+  descripcion String
+  tipo        String   @default("publico") // publico | privado | mixto
+  area        String?
+  enlace      String?
+  coverImage  String?
+  createdAt   DateTime @default(now())
+}
+
+model EventoAgenda {
+  id          String   @id @default(cuid())
+  titulo      String
+  descripcion String?
+  fecha       DateTime
+  lugar       String?
+  categoria   String?
+  enlace      String?
+  createdAt   DateTime @default(now())
+}
+
+model NotaObservatorio {
+  id          String    @id @default(cuid())
+  titulo      String
+  slug        String    @unique
+  contenido   String
+  coverImage  String?
+  status      Status    @default(DRAFT)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  interes   String?  // categoría de interés opcional
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  nombre    String
+  email     String
+  mensaje   String
+  leido     Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SiteConfig {
+  id      String  @id @default("singleton")
+  logoUrl String?
+  colors  Json
+  fonts   Json
+  socials Json
+  menus   Json
+
+  // Contenido editable de la portada (Home)
+  heroEyebrow     String?
+  heroTitle       String?
+  heroDescription String?
+
+  // Encabezados editables del resto de las páginas públicas
+  // Formato: { "editoriales": { "eyebrow": "...", "title": "...", "description": "..." }, ... }
+  pageHeaders Json?
+
+  // Contenido editable de la sección ".VOZ" (Sobre Nosotros)
+  aboutHistoria String?  // HTML del editor enriquecido
+  aboutMision   String?
+  aboutVision   String?
+  aboutValores  Json?    // [{ titulo, descripcion }]
+  aboutEquipo   Json?    // [{ nombre, rol }]
+}

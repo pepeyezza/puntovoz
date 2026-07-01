@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { updateAboutContent } from "@/lib/actions/about";
 import RichTextEditor from "@/components/admin/RichTextEditor";

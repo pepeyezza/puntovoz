@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { updateSiteConfig } from "@/lib/actions/config";
 import ImageUploadField from "@/components/admin/ImageUploadField";

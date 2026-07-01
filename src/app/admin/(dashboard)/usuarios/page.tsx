@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { createUser, deleteUser } from "@/lib/actions/users";
 import RoleSelectForm from "@/components/admin/RoleSelectForm";

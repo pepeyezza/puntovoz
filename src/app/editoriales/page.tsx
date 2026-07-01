@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import ArticleCard from "@/components/editorial/ArticleCard";
 import { EDITORIALES_DEMO } from "@/lib/demo-data";

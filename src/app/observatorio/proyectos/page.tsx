@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import { prisma } from "@/lib/prisma";

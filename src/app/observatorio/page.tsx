@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
@@ -197,5 +198,3 @@ export default async function ObservatorioPage() {
     </section>
   );
 }
- 
- 

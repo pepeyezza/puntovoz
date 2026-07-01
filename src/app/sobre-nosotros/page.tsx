@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import { COLABORADORES_DEMO } from "@/lib/demo-data";
 import { getPageHeader, esHtmlEnriquecido } from "@/lib/utils";

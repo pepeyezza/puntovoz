@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import AudiosPageClient from "@/components/audio/AudiosPageClient";
 import { getPageHeader } from "@/lib/utils";

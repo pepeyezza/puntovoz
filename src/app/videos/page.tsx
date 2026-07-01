@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import VideosPageClient from "@/components/video/VideosPageClient";
 import { getPageHeader } from "@/lib/utils";

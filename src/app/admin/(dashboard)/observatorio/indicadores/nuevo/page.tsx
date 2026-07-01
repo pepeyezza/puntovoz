@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createIndicador } from "@/lib/actions/indicadores";
 
 export default function NuevoIndicadorPage() {

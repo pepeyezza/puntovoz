@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createVideo } from "@/lib/actions/videos";
 
 export default function NuevoVideoPage() {

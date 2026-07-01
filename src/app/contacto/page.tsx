@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import ContactoPageClient from "@/components/layout/ContactoPageClient";
 import { getPageHeader } from "@/lib/utils";

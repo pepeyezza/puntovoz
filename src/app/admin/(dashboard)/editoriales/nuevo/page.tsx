@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import PostForm from "@/components/admin/PostForm";
 import { createPost } from "@/lib/actions/posts";
 

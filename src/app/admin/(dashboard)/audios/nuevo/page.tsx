@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { createAudio } from "@/lib/actions/audios";
 
 export default function NuevoAudioPage() {

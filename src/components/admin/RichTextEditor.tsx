@@ -49,7 +49,7 @@ export default function RichTextEditor({ name, defaultValue = "", placeholder }:
 
   function setLink() {
     const url = window.prompt("URL del enlace:");
-    if (url) editor.chain().focus().setLink({ href: url }).run();
+    if (url && editor) editor.chain().focus().setLink({ href: url }).run();
   }
 
   const ToolbarButton = ({

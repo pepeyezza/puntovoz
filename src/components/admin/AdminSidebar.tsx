@@ -23,6 +23,7 @@ const NAV: NavItem[] = [
   { href: "/admin/sobre-nosotros", label: "Sección .VOZ" },
   { href: "/admin/categorias", label: "Categorías y etiquetas" },
   { href: "/admin/contacto", label: "Mensajes" },
+  { href: "/admin/newsletter", label: "Suscriptores" },
   { href: "/admin/usuarios", label: "Usuarios", rolesPermitidos: ["ADMIN"] },
   { href: "/admin/configuracion", label: "Configuración", rolesPermitidos: ["ADMIN"] },
 ];

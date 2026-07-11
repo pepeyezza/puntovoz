@@ -19,21 +19,22 @@ type Props = {
 
 export default function ObservatorioPreview({
   indicadores = DATOS_EJEMPLO,
-  titulo = "El partido, en numeros",
-  linkLabel = "Ver Data completo",
+  titulo = "El partido, en números",
+  linkLabel = "Ver Data completo →",
 }: Props) {
   return (
     <section className="border-y border-principal/10 bg-principal py-16 text-secundario">
       <div className="mx-auto max-w-editorial px-5 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="eyebrow text-joven">Data - Chascomus</p>
+            <p className="eyebrow text-joven">Data · Chascomús</p>
             <h2 className="mt-2 font-display text-3xl">{titulo}</h2>
           </div>
           <a href="/observatorio" className="text-sm font-semibold hover:text-joven">
             {linkLabel}
           </a>
         </div>
+
         <div className="mt-10 grid gap-6 sm:grid-cols-3">
           {indicadores.map((ind) => (
             <div key={ind.nombre} className="rounded-2xl border border-secundario/15 p-6">

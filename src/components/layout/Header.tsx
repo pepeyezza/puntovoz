@@ -23,44 +23,39 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-principal/10 bg-secundario/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-editorial items-center justify-between px-5 py-3 lg:px-8 lg:py-4">
-        <Link
-          href="/"
-          className="font-logo text-4xl font-bold tracking-tight lg:text-5xl"
-          onClick={() => setMenuAbierto(false)}
-        >
+        <Link href="/" className="font-logo text-4xl font-bold tracking-tight lg:text-5xl" onClick={() => setMenuAbierto(false)}>
           <span className="text-acento">.</span>VOZ
         </Link>
 
         {/* Navegación desktop */}
         <nav className="hidden gap-7 lg:flex">
           {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-principal/80 transition-colors hover:text-acento"
-            >
+            <Link key={item.href} href={item.href} className="text-sm font-medium text-principal/80 transition-colors hover:text-acento">
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link
-          href="/contacto"
-          className="hidden rounded-full bg-principal px-5 py-2 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5 lg:inline-block"
-        >
+        <Link href="/contacto" className="hidden rounded-full bg-principal px-5 py-2 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5 lg:inline-block">
           Contacto
         </Link>
 
-        {/* Botón hamburguesa mobile */}
+        {/* Botón mobile con texto "Menú" */}
         <button
-          className="lg:hidden"
+          className="flex items-center gap-1.5 rounded-full border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
           {menuAbierto ? (
-            <X size={24} className="text-principal" />
+            <>
+              <X size={18} />
+              <span>Cerrar</span>
+            </>
           ) : (
-            <Menu size={24} className="text-principal" />
+            <>
+              <Menu size={18} />
+              <span>Menú</span>
+            </>
           )}
         </button>
       </div>
@@ -71,21 +66,13 @@ export default function Header() {
           <ul className="space-y-1">
             {NAV.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setMenuAbierto(false)}
-                  className="block rounded-xl px-4 py-3 text-base font-medium text-principal/80 transition-colors hover:bg-principal/5 hover:text-acento"
-                >
+                <Link href={item.href} onClick={() => setMenuAbierto(false)} className="block rounded-xl px-4 py-3 text-base font-medium text-principal/80 transition-colors hover:bg-principal/5 hover:text-acento">
                   {item.label}
                 </Link>
               </li>
             ))}
             <li className="pt-2">
-              <Link
-                href="/contacto"
-                onClick={() => setMenuAbierto(false)}
-                className="block rounded-full bg-principal px-5 py-3 text-center text-sm font-semibold text-secundario"
-              >
+              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block rounded-full bg-principal px-5 py-3 text-center text-sm font-semibold text-secundario">
                 Contacto
               </Link>
             </li>

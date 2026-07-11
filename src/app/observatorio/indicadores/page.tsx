@@ -36,7 +36,6 @@ export default async function IndicadoresPage() {
                 {ind.valor}<span className="ml-1 text-base text-secundario/50">{ind.unidad}</span>
               </p>
               <p className="mt-1 text-xs text-secundario/40">{ind.periodo}</p>
-              {ind.fuente && <p className="mt-2 text-xs text-secundario/30">Fuente: {ind.fuente}</p>}
             </div>
           ))}
         </div>

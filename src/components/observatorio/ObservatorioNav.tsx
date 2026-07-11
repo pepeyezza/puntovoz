@@ -39,6 +39,8 @@ export default function ObservatorioNav({ active }: { active: string }) {
             className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
               isActive
                 ? color.navActive
+                : color.bg === "bg-principal"
+                ? "text-secundario/60 hover:bg-secundario/10 hover:text-secundario"
                 : "text-principal/70 hover:bg-principal/5"
             }`}
           >

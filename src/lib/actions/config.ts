@@ -21,7 +21,11 @@ export async function updateSiteConfig(formData: FormData) {
   const homeNosotrosTitle = String(formData.get("homeNosotrosTitle") || "");
   const homeNosotrosText = String(formData.get("homeNosotrosText") || "");
 
-  const pageKeys = ["editoriales", "audios", "videos", "observatorio", "colaboradores", "sobreNosotros", "contacto"];
+  const pageKeys = [
+    "editoriales", "audios", "videos", "observatorio", "colaboradores", "sobreNosotros", "contacto",
+    "dataIndicadores", "dataProyectos", "dataAgenda", "dataOfertaAcademica", "dataInvestigacion",
+    "dataEntrevistas", "dataNotas",
+  ];
   const pageHeaders: Record<string, { eyebrow: string; title: string; description: string }> = {};
   for (const key of pageKeys) {
     pageHeaders[key] = {

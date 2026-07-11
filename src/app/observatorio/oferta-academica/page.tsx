@@ -2,8 +2,10 @@ export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { GraduationCap } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
+import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = { title: "Oferta Academica - Data" };
@@ -17,6 +19,11 @@ async function get() {
 }
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
+  const header = await getPageHeader("dataOfertaAcademica", {
+    eyebrow: "Data",
+    title: "Oferta academica",
+    description: "Instituciones educativas, institutos y centros de formacion en Chascomus.",
+  });
   const instituciones = await get();
   const tipoActivo = searchParams.tipo ?? "Todas";
   const filtradas = tipoActivo === "Todas" ? instituciones : instituciones.filter((i) => TIPO_LABEL[i.tipo] === tipoActivo);
@@ -25,9 +32,12 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
     <DataSeccionWrapper seccion="/observatorio/oferta-academica">
       <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
         <header className="max-w-2xl">
-          <p className="eyebrow text-principal/60">Data</p>
-          <h1 className="mt-2 font-display text-4xl">Oferta academica</h1>
-          <p className="mt-4 text-principal/70">Instituciones educativas, institutos y centros de formacion en Chascomus.</p>
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-joven/20">
+            <GraduationCap size={28} className="text-principal" />
+          </div>
+          <p className="eyebrow mt-4 text-principal/60">{header.eyebrow}</p>
+          <h1 className="mt-2 font-display text-4xl">{header.title}</h1>
+          {header.description && <p className="mt-4 text-principal/70">{header.description}</p>}
         </header>
         <div className="mt-10"><ObservatorioNav active="/observatorio/oferta-academica" /></div>
         <div className="mt-8 flex flex-wrap gap-2">

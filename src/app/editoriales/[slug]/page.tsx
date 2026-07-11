@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -28,9 +29,7 @@ async function getEditorial(slug: string) {
         coverImage: post.coverImage ?? "",
       };
     }
-  } catch {
-    // sigue al fallback
-  }
+  } catch { /* sigue al fallback */ }
   return EDITORIALES_DEMO.find((e) => e.slug === slug) ?? null;
 }
 
@@ -52,34 +51,25 @@ async function getRelacionados(slugActual: string) {
         coverImage: p.coverImage ?? undefined,
       }));
     }
-  } catch {
-    // sigue al fallback
-  }
+  } catch { /* sigue al fallback */ }
   return EDITORIALES_DEMO.filter((e) => e.slug !== slugActual).slice(0, 2);
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const editorial = await getEditorial(params.slug);
   if (!editorial) return {};
-  return {
-    title: editorial.title,
-    description: editorial.subtitle,
-    openGraph: { title: editorial.title, description: editorial.subtitle },
-  };
+  return { title: editorial.title, description: editorial.subtitle };
 }
 
 export default async function EditorialDetailPage({ params }: Props) {
   const editorial = await getEditorial(params.slug);
   if (!editorial) notFound();
-
   const relacionados = await getRelacionados(params.slug);
 
   return (
     <article>
       <header className="mx-auto max-w-2xl px-5 pt-16 lg:px-8">
-        <Link href="/editoriales" className="text-sm font-medium text-principal/60 hover:text-acento">
-          ← Editoriales
-        </Link>
+        <Link href="/editoriales" className="text-sm font-medium text-principal/60 hover:text-acento">← Editoriales</Link>
         <p className="eyebrow mt-6 text-acento">{editorial.category}</p>
         <h1 className="mt-3 font-display text-4xl leading-tight lg:text-5xl">{editorial.title}</h1>
         <p className="mt-4 text-lg text-principal/70">{editorial.subtitle}</p>
@@ -93,18 +83,10 @@ export default async function EditorialDetailPage({ params }: Props) {
       <div className="mx-auto mt-10 max-w-editorial overflow-hidden rounded-2xl">
         {editorial.coverImage ? (
           <div className="relative aspect-[16/9] w-full">
-            <Image
-              src={editorial.coverImage}
-              alt={editorial.title}
-              fill
-              className="object-cover"
-              priority
-            />
+            <Image src={editorial.coverImage} alt={editorial.title} fill className="object-cover" priority />
           </div>
         ) : (
-          <div className="flex aspect-[16/9] items-center justify-center bg-principal/5 text-principal/30">
-            .VOZ
-          </div>
+          <div className="flex aspect-[16/9] items-center justify-center bg-principal/5 text-principal/30">.VOZ</div>
         )}
       </div>
 
@@ -113,18 +95,13 @@ export default async function EditorialDetailPage({ params }: Props) {
           <div className="prose-voz text-lg text-principal/90" dangerouslySetInnerHTML={{ __html: editorial.content }} />
         ) : (
           <div className="space-y-5 text-lg leading-relaxed text-principal/90">
-            {editorial.content.split("\n\n").map((parrafo, i) => (
-              <p key={i}>{parrafo}</p>
-            ))}
+            {editorial.content.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
           </div>
         )}
-
-        {editorial.tags.length > 0 && (
+        {editorial.tags && editorial.tags.length > 0 && (
           <div className="mt-10 flex flex-wrap gap-2">
             {editorial.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-principal/5 px-4 py-1.5 text-xs font-medium text-principal/60">
-                #{tag}
-              </span>
+              <span key={tag} className="rounded-full bg-principal/5 px-4 py-1.5 text-xs font-medium text-principal/60">#{tag}</span>
             ))}
           </div>
         )}
@@ -135,7 +112,7 @@ export default async function EditorialDetailPage({ params }: Props) {
           <p className="eyebrow text-acento">Contenido relacionado</p>
           <div className="mt-8 grid gap-10 sm:grid-cols-2">
             {relacionados.map((r) => (
-              <ArticleCard key={r.slug} slug={r.slug} title={r.title} subtitle={r.subtitle} category={r.category} date={r.date} />
+              <ArticleCard key={r.slug} slug={r.slug} title={r.title} subtitle={r.subtitle} category={r.category} date={r.date} coverImage={r.coverImage} />
             ))}
           </div>
         </section>

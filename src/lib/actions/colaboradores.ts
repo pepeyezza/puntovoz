@@ -8,8 +8,8 @@ export async function updateColaboradorProfile(id: string, formData: FormData) {
   const name = String(formData.get("name") || "");
   const bio = String(formData.get("bio") || "");
   const photoUrl = String(formData.get("photoUrl") || "") || null;
+  const especialidad = String(formData.get("especialidad") || "") || null;
   const instagram = String(formData.get("instagram") || "");
-  const twitter = String(formData.get("twitter") || "");
   const linkedin = String(formData.get("linkedin") || "");
 
   await prisma.user.update({
@@ -18,8 +18,9 @@ export async function updateColaboradorProfile(id: string, formData: FormData) {
       name,
       bio,
       photoUrl,
-      socials: { instagram, twitter, linkedin },
-    },
+      especialidad,
+      socials: { instagram, linkedin },
+    } as any,
   });
 
   revalidatePath("/admin/colaboradores");

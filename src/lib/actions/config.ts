@@ -11,10 +11,15 @@ export async function updateSiteConfig(formData: FormData) {
   const colorJoven = String(formData.get("colorJoven") || "#f4a900");
   const instagram = String(formData.get("instagram") || "");
   const spotify = String(formData.get("spotify") || "");
-  const twitter = String(formData.get("twitter") || "");
+
   const heroEyebrow = String(formData.get("heroEyebrow") || "");
   const heroTitle = String(formData.get("heroTitle") || "");
   const heroDescription = String(formData.get("heroDescription") || "");
+
+  const homeDataTitle = String(formData.get("homeDataTitle") || "");
+  const homeDataSubtitle = String(formData.get("homeDataSubtitle") || "");
+  const homeNosotrosTitle = String(formData.get("homeNosotrosTitle") || "");
+  const homeNosotrosText = String(formData.get("homeNosotrosText") || "");
 
   const pageKeys = ["editoriales", "audios", "videos", "observatorio", "colaboradores", "sobreNosotros", "contacto"];
   const pageHeaders: Record<string, { eyebrow: string; title: string; description: string }> = {};
@@ -26,28 +31,28 @@ export async function updateSiteConfig(formData: FormData) {
     };
   }
 
+  const data = {
+    logoUrl,
+    colors: { principal: colorPrincipal, secundario: colorSecundario, acento: colorAcento, joven: colorJoven },
+    socials: { instagram, spotify },
+    heroEyebrow,
+    heroTitle,
+    heroDescription,
+    homeDataTitle,
+    homeDataSubtitle,
+    homeNosotrosTitle,
+    homeNosotrosText,
+    pageHeaders,
+  };
+
   await prisma.siteConfig.upsert({
     where: { id: "singleton" },
-    update: {
-      logoUrl,
-      colors: { principal: colorPrincipal, secundario: colorSecundario, acento: colorAcento, joven: colorJoven },
-      socials: { instagram, spotify, twitter },
-      heroEyebrow,
-      heroTitle,
-      heroDescription,
-      pageHeaders,
-    },
+    update: data,
     create: {
       id: "singleton",
-      logoUrl,
-      colors: { principal: colorPrincipal, secundario: colorSecundario, acento: colorAcento, joven: colorJoven },
       fonts: { display: "Fraunces", body: "Sora" },
-      socials: { instagram, spotify, twitter },
       menus: {},
-      heroEyebrow,
-      heroTitle,
-      heroDescription,
-      pageHeaders,
+      ...data,
     },
   });
 

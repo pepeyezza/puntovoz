@@ -26,16 +26,17 @@ enum Status {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(EDITOR)
-  bio       String?
-  photoUrl  String?
-  socials   Json?
-  posts     Post[]
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  password    String
+  role        Role     @default(EDITOR)
+  bio         String?
+  photoUrl    String?
+  socials     Json?
+  especialidad String? // Educación | Ciencia y Tecnología | Cultura | Política y Gobernanza | Producción | Comunidad
+  posts       Post[]
+  createdAt   DateTime @default(now())
 }
 
 model Post {
@@ -52,13 +53,10 @@ model Post {
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
-
   authorId    String
   author      User       @relation(fields: [authorId], references: [id])
-
   categories  Category[] @relation("PostCategories")
   tags        Tag[]      @relation("PostTags")
-
   related     Post[]     @relation("RelatedPosts")
   relatedBy   Post[]     @relation("RelatedPosts")
 }
@@ -73,7 +71,6 @@ model Audio {
   status      Status     @default(PUBLISHED)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
-
   categories  Category[] @relation("AudioCategories")
 }
 
@@ -87,15 +84,14 @@ model Video {
   status      Status     @default(PUBLISHED)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
-
   categories  Category[] @relation("VideoCategories")
 }
 
 model Category {
-  id    String  @id @default(cuid())
-  name  String
-  slug  String  @unique
-  posts Post[]  @relation("PostCategories")
+  id     String  @id @default(cuid())
+  name   String
+  slug   String  @unique
+  posts  Post[]  @relation("PostCategories")
   audios Audio[] @relation("AudioCategories")
   videos Video[] @relation("VideoCategories")
 }
@@ -107,15 +103,13 @@ model Tag {
   posts Post[] @relation("PostTags")
 }
 
-// --- Observatorio de Chascomús ---
-
 model Indicador {
   id        String   @id @default(cuid())
   nombre    String
   valor     Float
   unidad    String
-  periodo   String   // ej: "2026-Q2"
-  categoria String?  // empleo, producción, demografía, etc.
+  periodo   String
+  categoria String?
   fuente    String?
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
@@ -140,7 +134,7 @@ model ProyectoLocal {
   nombre      String
   slug        String   @unique
   descripcion String
-  tipo        String   @default("publico") // publico | privado | mixto
+  tipo        String   @default("publico")
   area        String?
   enlace      String?
   coverImage  String?
@@ -169,10 +163,65 @@ model NotaObservatorio {
   createdAt   DateTime  @default(now())
 }
 
+model InstitucionAcademica {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  nombre      String
+  tipo        String
+  descripcion String?
+  direccion   String?
+  telefono    String?
+  email       String?
+  web         String?
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+  carreras    CarreraOferta[]
+}
+
+model CarreraOferta {
+  id             String   @id @default(cuid())
+  nombre         String
+  duracion       String?
+  modalidad      String   @default("presencial")
+  titulo         String?
+  area           String?
+  descripcion    String?
+  inscripcion    String?
+  planEstudioUrl String?
+  institucionId  String
+  institucion    InstitucionAcademica @relation(fields: [institucionId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+}
+
+model InstitucionCientifica {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  nombre      String
+  descripcion String?
+  logoUrl     String?
+  direccion   String?
+  telefono    String?
+  email       String?
+  web         String?
+  createdAt   DateTime @default(now())
+  servicios   ServicioCientifico[]
+}
+
+model ServicioCientifico {
+  id            String   @id @default(cuid())
+  nombre        String
+  descripcion   String?
+  area          String?
+  contacto      String?
+  institucionId String
+  institucion   InstitucionCientifica @relation(fields: [institucionId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
 model NewsletterSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
-  interes   String?  // categoría de interés opcional
+  interes   String?
   createdAt DateTime @default(now())
 }
 
@@ -193,19 +242,20 @@ model SiteConfig {
   socials Json
   menus   Json
 
-  // Contenido editable de la portada (Home)
   heroEyebrow     String?
   heroTitle       String?
   heroDescription String?
 
-  // Encabezados editables del resto de las páginas públicas
-  // Formato: { "editoriales": { "eyebrow": "...", "title": "...", "description": "..." }, ... }
+  homeDataTitle     String?
+  homeDataSubtitle  String?
+  homeNosotrosTitle String?
+  homeNosotrosText  String?
+
   pageHeaders Json?
 
-  // Contenido editable de la sección ".VOZ" (Sobre Nosotros)
-  aboutHistoria String?  // HTML del editor enriquecido
+  aboutHistoria String?
   aboutMision   String?
   aboutVision   String?
-  aboutValores  Json?    // [{ titulo, descripcion }]
-  aboutEquipo   Json?    // [{ nombre, rol }]
+  aboutValores  Json?
+  aboutEquipo   Json?
 }

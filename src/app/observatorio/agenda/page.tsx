@@ -1,26 +1,28 @@
 export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { AGENDA_DEMO } from "@/lib/demo-data";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 
 export const metadata: Metadata = {
-  title: "Agenda cultural · Observatorio",
+  title: "Agenda · Data",
   description: "Próximos eventos culturales, productivos y comunitarios en Chascomús.",
 };
 
 async function getAgenda() {
   try {
     const agenda = await prisma.eventoAgenda.findMany({ orderBy: { fecha: "asc" } });
-    if (agenda.length === 0) return AGENDA_DEMO;
+    if (agenda.length === 0) return [];
     return agenda.map((ev) => ({
       titulo: ev.titulo,
+      descripcion: ev.descripcion ?? "",
       fecha: ev.fecha.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
       lugar: ev.lugar ?? "",
       categoria: ev.categoria ?? "",
+      enlace: (ev as any).enlace ?? "",
     }));
   } catch {
-    return AGENDA_DEMO;
+    return [];
   }
 }
 
@@ -41,23 +43,35 @@ export default async function AgendaPage() {
         <ObservatorioNav active="/observatorio/agenda" />
       </div>
 
-      <ol className="mt-10 space-y-4 border-l border-principal/15 pl-6">
-        {agenda.map((ev) => (
-          <li key={ev.titulo} className="relative">
-            <span className="absolute -left-[31px] top-1.5 h-2.5 w-2.5 rounded-full bg-joven" />
-            <p className="text-sm font-semibold text-acento">{ev.fecha}</p>
-            <p className="mt-1 font-display text-xl">{ev.titulo}</p>
-            <p className="mt-1 text-sm text-principal/60">
-              {ev.lugar}{ev.categoria ? (' · ' + ev.categoria) : ''}
-            </p>
-            {(ev as any).enlace && (
-              <a href={(ev as any).enlace} target="_blank" rel="noreferrer" className="mt-1 inline-block text-xs font-medium text-acento hover:underline">
-                Ver más →
-              </a>
-            )}
-          </li>
-        ))}
-      </ol>
+      {agenda.length === 0 ? (
+        <p className="mt-10 text-principal/50">Todavía no hay eventos cargados.</p>
+      ) : (
+        <ol className="mt-10 space-y-6 border-l border-principal/15 pl-6">
+          {agenda.map((ev) => (
+            <li key={ev.titulo} className="relative">
+              <span className="absolute -left-[31px] top-1.5 h-2.5 w-2.5 rounded-full bg-joven" />
+              <p className="text-sm font-semibold text-acento">{ev.fecha}</p>
+              <p className="mt-1 font-display text-xl">{ev.titulo}</p>
+              {ev.descripcion && (
+                <p className="mt-1 text-sm text-principal/70">{ev.descripcion}</p>
+              )}
+              <p className="mt-1 text-sm text-principal/50">
+                {ev.lugar}{ev.categoria ? ` · ${ev.categoria}` : ""}
+              </p>
+              {ev.enlace && (
+                <a
+                  href={ev.enlace}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 inline-block rounded-full border border-acento px-4 py-1 text-xs font-medium text-acento transition-colors hover:bg-acento hover:text-secundario"
+                >
+                  Ver más →
+                </a>
+              )}
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
 }

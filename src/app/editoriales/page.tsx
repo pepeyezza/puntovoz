@@ -1,16 +1,16 @@
 export const dynamic = "force-dynamic";
+
 import type { Metadata } from "next";
 import ArticleCard from "@/components/editorial/ArticleCard";
-import { EDITORIALES_DEMO } from "@/lib/demo-data";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
+import { EDITORIALES_DEMO } from "@/lib/demo-data";
+import { CATEGORIAS_VOZ } from "@/lib/categorias";
 
 export const metadata: Metadata = {
   title: "Editoriales",
-  description: "Artículos propios de .VOZ sobre desarrollo local, educación, cultura, política y producción.",
+  description: "Artículos propios de .VOZ.",
 };
-
-const CATEGORIAS = ["Todas", "Educación", "Tecnología", "Cultura", "Política y gestión", "Producción", "Comunidad"];
 
 async function getEditoriales() {
   try {
@@ -33,24 +33,15 @@ async function getEditoriales() {
   }
 }
 
-export default async function EditorialesPage({
-  searchParams,
-}: {
-  searchParams: { categoria?: string };
-}) {
+export default async function EditorialesPage({ searchParams }: { searchParams: { categoria?: string } }) {
   const header = await getPageHeader("editoriales", {
     eyebrow: "Editoriales",
     title: "Artículos propios de .VOZ",
-    description: "Análisis y notas de producción propia sobre desarrollo local, educación, cultura, política y producción.",
+    description: "Análisis y notas de producción propia.",
   });
-
   const categoriaActiva = searchParams.categoria ?? "Todas";
-  const todosLosEditoriales = await getEditoriales();
-
-  const editoriales =
-    categoriaActiva === "Todas"
-      ? todosLosEditoriales
-      : todosLosEditoriales.filter((e) => e.category === categoriaActiva);
+  const todos = await getEditoriales();
+  const editoriales = categoriaActiva === "Todas" ? todos : todos.filter((e) => e.category === categoriaActiva);
 
   return (
     <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
@@ -61,7 +52,7 @@ export default async function EditorialesPage({
       </header>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        {CATEGORIAS.map((cat) => (
+        {["Todas", ...CATEGORIAS_VOZ].map((cat) => (
           <a
             key={cat}
             href={cat === "Todas" ? "/editoriales" : `/editoriales?categoria=${encodeURIComponent(cat)}`}
@@ -77,21 +68,11 @@ export default async function EditorialesPage({
       </div>
 
       {editoriales.length === 0 ? (
-        <p className="mt-12 text-principal/60">
-          Todavía no hay editoriales publicados en esta categoría.
-        </p>
+        <p className="mt-12 text-principal/60">No hay editoriales publicados en esta categoría.</p>
       ) : (
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {editoriales.map((e) => (
-            <ArticleCard
-              key={e.slug}
-              slug={e.slug}
-              title={e.title}
-              subtitle={e.subtitle}
-              category={e.category}
-              date={e.date}
-              coverImage={e.coverImage}
-            />
+            <ArticleCard key={e.slug} slug={e.slug} title={e.title} subtitle={e.subtitle} category={e.category} date={e.date} coverImage={e.coverImage} />
           ))}
         </div>
       )}

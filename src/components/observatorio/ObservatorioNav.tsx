@@ -3,9 +3,11 @@ import Link from "next/link";
 const TABS = [
   { href: "/observatorio", label: "Resumen" },
   { href: "/observatorio/indicadores", label: "Indicadores" },
-  { href: "/observatorio/entrevistas", label: "Entrevistas" },
   { href: "/observatorio/proyectos", label: "Proyectos" },
-  { href: "/observatorio/agenda", label: "Agenda cultural" },
+  { href: "/observatorio/agenda", label: "Agenda" },
+  { href: "/observatorio/oferta-academica", label: "Oferta académica" },
+  { href: "/observatorio/investigacion", label: "Investigación" },
+  { href: "/observatorio/entrevistas", label: "Entrevistas" },
   { href: "/observatorio/notas", label: "Notas" },
 ];
 

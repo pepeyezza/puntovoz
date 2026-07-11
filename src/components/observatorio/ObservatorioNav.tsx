@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 const TABS = [
@@ -12,7 +13,7 @@ const TABS = [
 ];
 
 // Colores de fondo por sección — deben coincidir con los del resumen
-export const SECCION_COLORS: Record<string, { bg: string; text: string; navActive: string }> = {
+export const SECCION_COLORS: Record<string, { bg: string; text: string; navActive: string; style?: React.CSSProperties }> = {
   "/observatorio": { bg: "bg-secundario", text: "text-principal", navActive: "bg-principal text-secundario" },
   "/observatorio/indicadores": { bg: "bg-principal", text: "text-secundario", navActive: "bg-joven text-principal" },
   "/observatorio/proyectos": { bg: "bg-acento/10", text: "text-principal", navActive: "bg-acento text-secundario" },

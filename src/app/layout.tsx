@@ -4,7 +4,6 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import "@/styles/globals.css";
-import Script from "next/script";
 
 export const metadata: Metadata = {
   title: { default: ".VOZ", template: "%s · .VOZ" },

@@ -18,7 +18,7 @@ function tipoLabel(tipo: string) {
 async function getProyectos() {
   try {
     const p = await prisma.proyectoLocal.findMany({ orderBy: { createdAt: "desc" } });
-    return p.map((p) => ({ nombre: p.nombre, area: p.area ?? "", tipo: tipoLabel(p.tipo), descripcion: p.descripcion, enlace: p.enlace ?? "" }));
+    return p.map((p) => ({ nombre: p.nombre, area: p.area ?? "", tipo: tipoLabel(p.tipo), descripcion: p.descripcion, enlace: p.enlace ?? "", imagen: (p as any).imagen ?? "" }));
   } catch { return []; }
 }
 
@@ -61,9 +61,9 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
             {proyectos.map((p) => (
               <li key={p.nombre} className="rounded-2xl bg-secundario/60 p-6">
                 <div className="flex items-start gap-4">
-                  {(p as any).imagen ? (
+                  {p.imagen ? (
                     <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-principal/10">
-                      <Image src={(p as any).imagen} alt={p.nombre} fill className="object-cover" />
+                      <Image src={p.imagen} alt={p.nombre} fill className="object-cover" />
                     </div>
                   ) : null}
                   <div className="flex-1">

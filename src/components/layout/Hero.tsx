@@ -25,7 +25,7 @@ export default function Hero({
               href="/editoriales"
               className="rounded-full bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5"
             >
-              Leer las últimas notas
+              Últimas notas
             </Link>
             <Link
               href="/observatorio"

@@ -22,7 +22,7 @@ export default function Newsletter() {
         <div className="rounded-3xl bg-acento/10 p-10 lg:p-14">
           <p className="eyebrow text-acento">Sumate</p>
           <h2 className="mt-2 max-w-md font-display text-3xl">
-            Recibi lo mas relevante de .VOZ cada semana.
+            Recibí lo más relevante de .VOZ cada semana.
           </h2>
           {status === "ok" ? (
             <p className="mt-6 text-sm font-medium text-principal">

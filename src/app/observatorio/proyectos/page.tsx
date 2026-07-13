@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
+import Image from "next/image";
 import { FolderKanban } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
@@ -9,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = { title: "Proyectos - Data" };
 
 function tipoLabel(tipo: string) {
-  if (tipo === "publico") return "Publico";
+  if (tipo === "publico") return "Público";
   if (tipo === "privado") return "Privado";
   return "Mixto";
 }
@@ -21,7 +22,7 @@ async function getProyectos() {
   } catch { return []; }
 }
 
-const TIPOS = ["Todos", "Publico", "Privado", "Mixto"];
+const TIPOS = ["Todos", "Público", "Privado", "Mixto"];
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
   const header = await getPageHeader("dataProyectos", {
@@ -59,14 +60,23 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
           <ul className="mt-8 space-y-4">
             {proyectos.map((p) => (
               <li key={p.nombre} className="rounded-2xl bg-secundario/60 p-6">
-                <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  {(p as any).imagen ? (
+                    <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-principal/10">
+                      <Image src={(p as any).imagen} alt={p.nombre} fill className="object-cover" />
+                    </div>
+                  ) : null}
                   <div className="flex-1">
-                    <p className="font-display text-xl">{p.nombre}</p>
-                    {p.area && <p className="mt-1 text-sm text-principal/50">{p.area}</p>}
-                    {p.descripcion && <p className="mt-3 text-sm text-principal/70">{p.descripcion}</p>}
-                    {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver mas</a>}
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <p className="font-display text-xl">{p.nombre}</p>
+                        {p.area && <p className="mt-1 text-sm text-principal/50">{p.area}</p>}
+                        {p.descripcion && <p className="mt-3 text-sm text-principal/70">{p.descripcion}</p>}
+                        {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver más</a>}
+                      </div>
+                      <span className="shrink-0 rounded-full bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
+                    </div>
                   </div>
-                  <span className="shrink-0 rounded-full bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
                 </div>
               </li>
             ))}

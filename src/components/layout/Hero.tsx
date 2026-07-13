@@ -20,7 +20,7 @@ export default function Hero({
             {title}
           </h1>
           <p className="mt-6 max-w-md text-base text-principal/70">{description}</p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href="/editoriales"
               className="rounded-full bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5"
@@ -28,15 +28,20 @@ export default function Hero({
               Leer las últimas notas
             </Link>
             <Link
-              href="/audios"
-              className="text-sm font-semibold text-principal underline-offset-4 hover:underline"
+              href="/observatorio"
+              className="rounded-full bg-joven px-6 py-3 text-sm font-semibold text-principal transition-transform hover:-translate-y-0.5"
             >
-              Escuchar .VOZ →
+              Data
+            </Link>
+            <Link
+              href="/colaboradores"
+              className="rounded-full bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5"
+            >
+              Colaboradores
             </Link>
           </div>
         </div>
-
-        {/* Marca visual: onda de audio estilizada, ancla al concepto sonoro de la marca */}
+        {/* Marca visual: onda de audio estilizada */}
         <div aria-hidden className="flex h-40 items-end justify-center gap-1.5 lg:h-56">
           {WAVE_HEIGHTS.map((h, i) => (
             <span

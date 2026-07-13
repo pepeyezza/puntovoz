@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BarChart2, FolderKanban, CalendarDays, GraduationCap, Microscope, Mic2, FileText } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
@@ -80,10 +81,13 @@ export default async function ObservatorioPage() {
         <ObservatorioNav active="/observatorio" />
       </div>
 
-      {/* INDICADORES — fondo oscuro tipo home */}
+      {/* INDICADORES */}
       <div className="mt-10 rounded-3xl bg-principal p-8 text-secundario">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Indicadores</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <BarChart2 size={24} className="text-joven" />
+            <h2 className="font-display text-2xl">Indicadores</h2>
+          </div>
           <Link href="/observatorio/indicadores" className="text-sm font-semibold text-joven hover:opacity-80">Ver todos →</Link>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -100,10 +104,13 @@ export default async function ObservatorioPage() {
         </div>
       </div>
 
-      {/* PROYECTOS — fondo acento suave */}
+      {/* PROYECTOS */}
       <div className="mt-6 rounded-3xl bg-acento/10 p-8">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Proyectos</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FolderKanban size={24} className="text-acento" />
+            <h2 className="font-display text-2xl">Proyectos</h2>
+          </div>
           <Link href="/observatorio/proyectos" className="text-sm font-semibold text-acento hover:opacity-80">Ver todos →</Link>
         </div>
         <ul className="mt-6 space-y-3">
@@ -119,10 +126,13 @@ export default async function ObservatorioPage() {
         </ul>
       </div>
 
-      {/* AGENDA — fondo verde */}
+      {/* AGENDA */}
       <div className="mt-6 rounded-3xl p-8" style={{ backgroundColor: "#e8f5e9" }}>
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl" style={{ color: "#2d6a4f" }}>Agenda cultural</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <CalendarDays size={24} style={{ color: "#2d6a4f" }} />
+            <h2 className="font-display text-2xl" style={{ color: "#2d6a4f" }}>Agenda cultural</h2>
+          </div>
           <Link href="/observatorio/agenda" className="text-sm font-semibold hover:opacity-80" style={{ color: "#2d6a4f" }}>Ver toda →</Link>
         </div>
         <ul className="mt-6 space-y-3">
@@ -135,10 +145,13 @@ export default async function ObservatorioPage() {
         </ul>
       </div>
 
-      {/* OFERTA ACADÉMICA — fondo joven suave */}
+      {/* OFERTA ACADÉMICA */}
       <div className="mt-6 rounded-3xl bg-joven/10 p-8">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Oferta académica</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <GraduationCap size={24} className="text-principal/70" />
+            <h2 className="font-display text-2xl">Oferta académica</h2>
+          </div>
           <Link href="/observatorio/oferta-academica" className="text-sm font-semibold text-joven hover:opacity-80">Ver todo →</Link>
         </div>
         {instituciones.length === 0 ? (
@@ -157,10 +170,13 @@ export default async function ObservatorioPage() {
         )}
       </div>
 
-      {/* INVESTIGACIÓN CIENTÍFICA — fondo azul oscuro suave */}
+      {/* INVESTIGACIÓN CIENTÍFICA */}
       <div className="mt-6 rounded-3xl bg-principal/5 p-8">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Investigación científica</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Microscope size={24} className="text-principal/70" />
+            <h2 className="font-display text-2xl">Investigación científica</h2>
+          </div>
           <Link href="/observatorio/investigacion" className="text-sm font-semibold hover:text-acento">Ver todo →</Link>
         </div>
         {cientificas.length === 0 ? (
@@ -179,10 +195,13 @@ export default async function ObservatorioPage() {
         )}
       </div>
 
-      {/* ENTREVISTAS — al final, fondo neutro */}
+      {/* ENTREVISTAS */}
       <div className="mt-6 rounded-3xl border border-principal/10 p-8">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Entrevistas</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Mic2 size={24} className="text-principal/60" />
+            <h2 className="font-display text-2xl">Entrevistas</h2>
+          </div>
           <Link href="/observatorio/entrevistas" className="text-sm font-semibold hover:text-acento">Ver todas →</Link>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -196,10 +215,13 @@ export default async function ObservatorioPage() {
         </div>
       </div>
 
-      {/* NOTAS — al final */}
+      {/* NOTAS */}
       <div className="mt-6 rounded-3xl border border-principal/10 p-8">
-        <div className="flex items-end justify-between">
-          <h2 className="font-display text-2xl">Notas del Observatorio</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <FileText size={24} className="text-principal/60" />
+            <h2 className="font-display text-2xl">Notas del Observatorio</h2>
+          </div>
           <Link href="/observatorio/notas" className="text-sm font-semibold hover:text-acento">Ver todas →</Link>
         </div>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">

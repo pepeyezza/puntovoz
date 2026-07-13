@@ -137,6 +137,7 @@ model ProyectoLocal {
   tipo        String   @default("publico")
   area        String?
   enlace      String?
+  imagen      String?
   coverImage  String?
   createdAt   DateTime @default(now())
 }
@@ -149,6 +150,7 @@ model EventoAgenda {
   lugar       String?
   categoria   String?
   enlace      String?
+  imagen      String?
   createdAt   DateTime @default(now())
 }
 

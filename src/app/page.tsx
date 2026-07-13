@@ -58,7 +58,11 @@ export default async function HomePage() {
             <p className="eyebrow text-acento">Recién publicado</p>
             <h2 className="mt-2 font-display text-3xl">Últimos editoriales</h2>
           </div>
-          <Link href="/editoriales" className="hidden text-sm font-semibold hover:text-acento sm:inline">Ver todos →</Link>
+          <div className="hidden items-center gap-4 sm:flex">
+            <Link href="/observatorio" className="text-sm font-medium text-principal/60 hover:text-acento">Data →</Link>
+            <Link href="/colaboradores" className="text-sm font-medium text-principal/60 hover:text-acento">Colaboradores →</Link>
+            <Link href="/editoriales" className="text-sm font-semibold hover:text-acento">Ver todos →</Link>
+          </div>
         </div>
         <div className="mt-10 grid gap-10 lg:grid-cols-3">
           {editoriales.map((a, i) => <ArticleCard key={a.slug} {...a} size={i === 0 ? "large" : "default"} />)}

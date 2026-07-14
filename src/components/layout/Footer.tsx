@@ -31,7 +31,7 @@ export default async function Footer() {
             <span className="text-acento">.</span>VOZ
           </p>
           <p className="mt-3 max-w-xs text-sm text-secundario/70">
-            Comunicacion, divulgacion y opinion para el desarrollo de nuestra comunidad.
+            Comunicación, divulgación y opinión para el desarrollo de nuestra comunidad.
           </p>
         </div>
 

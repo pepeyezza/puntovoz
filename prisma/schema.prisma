@@ -260,4 +260,6 @@ model SiteConfig {
   aboutVision   String?
   aboutValores  Json?
   aboutEquipo   Json?
+
+  bannerImages  Json?
 }

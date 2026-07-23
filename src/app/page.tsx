@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Hero from "@/components/layout/Hero";
+import BannerCarousel from "@/components/layout/BannerCarousel";
 import ArticleCard from "@/components/editorial/ArticleCard";
 import AudioCard from "@/components/audio/AudioCard";
 import ObservatorioPreview from "@/components/observatorio/ObservatorioPreview";
@@ -21,9 +22,10 @@ async function getConfig() {
       dataSubtitle: (config as any)?.homeDataSubtitle || "Ver Data completo →",
       nosotrosTitle: (config as any)?.homeNosotrosTitle || "Una mirada crítica y cercana sobre lo que construye nuestra región.",
       nosotrosText: (config as any)?.homeNosotrosText || ".VOZ es un espacio de comunicación, divulgación y opinión que pone en agenda el desarrollo local.",
+      bannerImages: ((config as any)?.bannerImages as { url: string; caption: string }[]) ?? [],
     };
   } catch {
-    return { dataTitle: "El partido, en números", dataSubtitle: "Ver Data completo →", nosotrosTitle: "Una mirada crítica y cercana.", nosotrosText: ".VOZ es un espacio de comunicación." };
+    return { dataTitle: "El partido, en números", dataSubtitle: "Ver Data completo →", nosotrosTitle: "Una mirada crítica y cercana.", nosotrosText: ".VOZ es un espacio de comunicación.", bannerImages: [] };
   }
 }
 
@@ -50,8 +52,14 @@ export default async function HomePage() {
 
   return (
     <>
+      {/* Banner de fotos — entre el nav y el hero */}
+      {config.bannerImages.length > 0 && (
+        <BannerCarousel images={config.bannerImages} />
+      )}
+
       <Hero eyebrow={config.eyebrow} title={config.title} description={config.description} />
 
+      {/* Últimos editoriales */}
       <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
@@ -69,6 +77,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Explorá por tema */}
       <section className="border-y border-principal/10 bg-principal/[0.03] py-12">
         <div className="mx-auto max-w-editorial px-5 lg:px-8">
           <p className="eyebrow text-acento">Explorá por tema</p>
@@ -82,6 +91,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Últimos audios */}
       <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
@@ -97,6 +107,7 @@ export default async function HomePage() {
 
       <ObservatorioPreview indicadores={indicadores} titulo={config.dataTitle} linkLabel={config.dataSubtitle} />
 
+      {/* Quiénes somos */}
       <section className="mx-auto max-w-editorial px-5 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>

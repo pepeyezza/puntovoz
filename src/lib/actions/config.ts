@@ -21,6 +21,11 @@ export async function updateSiteConfig(formData: FormData) {
   const homeNosotrosTitle = String(formData.get("homeNosotrosTitle") || "");
   const homeNosotrosText = String(formData.get("homeNosotrosText") || "");
 
+  const bannerImages = [1, 2, 3].map((i) => ({
+    url: String(formData.get(`banner_${i}_url`) || ""),
+    caption: String(formData.get(`banner_${i}_caption`) || ""),
+  })).filter((img) => img.url);
+
   const pageKeys = [
     "editoriales", "audios", "videos", "observatorio", "colaboradores", "sobreNosotros", "contacto",
     "dataIndicadores", "dataProyectos", "dataAgenda", "dataOfertaAcademica", "dataInvestigacion",
@@ -46,6 +51,7 @@ export async function updateSiteConfig(formData: FormData) {
     homeDataSubtitle,
     homeNosotrosTitle,
     homeNosotrosText,
+    bannerImages,
     pageHeaders,
   };
 
@@ -62,11 +68,4 @@ export async function updateSiteConfig(formData: FormData) {
 
   revalidatePath("/admin/configuracion");
   revalidatePath("/");
-  revalidatePath("/editoriales");
-  revalidatePath("/audios");
-  revalidatePath("/videos");
-  revalidatePath("/observatorio");
-  revalidatePath("/colaboradores");
-  revalidatePath("/sobre-nosotros");
-  revalidatePath("/contacto");
 }

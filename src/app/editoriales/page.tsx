@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 async function getEditoriales() {
   try {
     const posts = await prisma.post.findMany({
-      where: { type: "EDITORIAL", status: "PUBLISHED" },
-      orderBy: { publishedAt: "desc" },
+where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } },
+orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
       include: { categories: true },
     });
     if (posts.length === 0) return EDITORIALES_DEMO;

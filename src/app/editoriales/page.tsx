@@ -17,7 +17,7 @@ async function getEditoriales() {
     const posts = await prisma.post.findMany({
 where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } },
 orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
-      include: { categories: true },
+      include: { categories: true, author: true },
     });
     if (posts.length === 0) return EDITORIALES_DEMO;
     return posts.map((p) => ({
@@ -25,6 +25,7 @@ orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
       title: p.title,
       subtitle: p.subtitle ?? "",
       category: p.categories[0]?.name ?? "",
+      author: p.author?.name ?? "Redacción .VOZ",
       date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
       coverImage: p.coverImage ?? undefined,
     }));

@@ -16,7 +16,8 @@ export default async function NuevoPostColaboradorPage({ params }: { params: { i
       <div className="mt-8">
         <PostForm
           action={createPost}
-          hiddenFields={{ type: "COLABORADOR", authorId: colaborador.id }}
+hiddenFields={{ authorId: colaborador.id }}
+showTypeSelector
           cancelHref={`/admin/colaboradores/${colaborador.id}`}
         />
       </div>

@@ -33,7 +33,7 @@ async function getHomeData() {
   try {
     const [posts, audios, indicadores] = await Promise.all([
       prisma.post.findMany({ where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } }, orderBy: [{ featured: "desc" }, { publishedAt: "desc" }], take: 3, include: { categories: true } }),
-      prisma.audio.findMany({ where: { status: "PUBLISHED" }, orderBy: [{ featured: "desc" }, { publishedAt: "desc" }], take: 3 }),
+      prisma.audio.findMany({ where: { status: "PUBLISHED" }, orderBy: { publishedAt: "desc" }, take: 3 }),
       prisma.indicador.findMany({ orderBy: { updatedAt: "desc" }, take: 3 }),
     ]);
     return {

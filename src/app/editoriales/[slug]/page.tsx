@@ -17,7 +17,7 @@ async function getEditorial(slug: string) {
       where: { slug },
       include: { categories: true, tags: true, author: true },
     });
-    if (post && post.type === "EDITORIAL") {
+if (post && post.type !== null) {
       return {
         title: post.title,
         subtitle: post.subtitle ?? "",
@@ -36,7 +36,7 @@ async function getEditorial(slug: string) {
 async function getRelacionados(slugActual: string) {
   try {
     const posts = await prisma.post.findMany({
-      where: { type: "EDITORIAL", status: "PUBLISHED", slug: { not: slugActual } },
+where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] }, slug: { not: slugActual } },
       orderBy: { publishedAt: "desc" },
       take: 2,
       include: { categories: true },

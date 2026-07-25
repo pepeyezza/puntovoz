@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, Menu } from "lucide-react";
 
-// Color de fondo y texto para cada sección — respeta la paleta de accesos rápidos
 const NAV = [
   { href: "/editoriales", label: "Editoriales", bg: "bg-acento", text: "text-secundario" },
   { href: "/audios", label: "Audios", bg: "bg-joven", text: "text-principal" },
@@ -23,31 +22,31 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-principal/10 bg-secundario/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-editorial items-center justify-between px-5 py-3 lg:px-8 lg:py-4">
+      <div className="mx-auto flex max-w-editorial items-center justify-between px-5 py-3 lg:px-8 lg:py-3">
         <Link href="/" className="font-logo text-4xl font-bold tracking-tight lg:text-5xl" onClick={() => setMenuAbierto(false)}>
           <span className="text-acento">.</span>VOZ
         </Link>
 
-        {/* Navegación desktop — botones coloreados */}
-        <nav className="hidden gap-2 lg:flex">
+        {/* Navegación desktop — botones rectangulares coloreados */}
+        <nav className="hidden gap-1.5 lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 ${item.bg} ${item.text} opacity-80 hover:opacity-100`}
+              className={`px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80 ${item.bg} ${item.text}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link href="/contacto" className="hidden rounded-full border border-principal/20 px-5 py-2 text-sm font-semibold text-principal transition-colors hover:bg-principal hover:text-secundario lg:inline-block">
+        <Link href="/contacto" className="hidden border border-principal/20 px-5 py-2 text-sm font-semibold text-principal transition-colors hover:bg-principal hover:text-secundario lg:inline-block">
           Contacto
         </Link>
 
         {/* Botón mobile */}
         <button
-          className="flex items-center gap-1.5 rounded-full border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
+          className="flex items-center gap-1.5 border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
@@ -58,20 +57,20 @@ export default function Header() {
       {/* Menú mobile desplegable */}
       {menuAbierto && (
         <nav className="border-t border-principal/10 bg-secundario px-5 pb-6 pt-4 lg:hidden">
-          <ul className="space-y-2">
+          <ul className="space-y-1.5">
             {NAV.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={() => setMenuAbierto(false)}
-                  className={`block rounded-xl px-4 py-3 text-sm font-semibold ${item.bg} ${item.text}`}
+                  className={`block px-4 py-3 text-sm font-semibold ${item.bg} ${item.text}`}
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
             <li className="pt-2">
-              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block rounded-full border border-principal/20 px-5 py-3 text-center text-sm font-semibold text-principal">
+              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block border border-principal/20 px-5 py-3 text-center text-sm font-semibold text-principal">
                 Contacto
               </Link>
             </li>

@@ -22,20 +22,25 @@ async function getPost(authorId: string, postSlug: string) {
             photoUrl: user.photoUrl ?? "",
             photoInitials: user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase(),
           },
-          post: { title: post.title, content: post.content, category: "", date: (post.publishedAt ?? post.createdAt).toLocaleDateString("es-AR") },
+          post: {
+            title: post.title,
+            content: post.content,
+            category: "",
+            date: (post.publishedAt ?? post.createdAt).toLocaleDateString("es-AR"),
+            coverImage: post.coverImage ?? "",
+          },
         };
       }
     }
   } catch {
     // sigue al fallback
   }
-
   const demoColaborador = COLABORADORES_DEMO.find((c) => c.slug === authorId);
   const demoPost = POSTS_COLABORADORES_DEMO.find((p) => p.slug === postSlug && p.authorSlug === authorId);
   if (!demoColaborador || !demoPost) return { colaborador: null, post: null };
   return {
     colaborador: { id: demoColaborador.slug, name: demoColaborador.name, photoUrl: "", photoInitials: demoColaborador.photoInitials },
-    post: { title: demoPost.title, content: demoPost.content, category: demoPost.category, date: demoPost.date },
+    post: { title: demoPost.title, content: demoPost.content, category: demoPost.category, date: demoPost.date, coverImage: "" },
   };
 }
 
@@ -57,6 +62,7 @@ export default async function PostColaboradorPage({ params }: Props) {
 
       {post.category && <p className="eyebrow mt-6 text-acento">{post.category}</p>}
       <h1 className="mt-3 font-display text-4xl leading-tight">{post.title}</h1>
+
       <div className="mt-6 flex items-center gap-3 text-sm text-principal/50">
         <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-principal/10 text-xs font-semibold">
           {colaborador.photoUrl ? (
@@ -69,6 +75,15 @@ export default async function PostColaboradorPage({ params }: Props) {
         <span aria-hidden>·</span>
         <span>{post.date}</span>
       </div>
+
+      {/* Imagen de portada */}
+      {post.coverImage && (
+        <div className="mt-8 overflow-hidden rounded-2xl">
+          <div className="relative aspect-[16/9] w-full">
+            <Image src={post.coverImage} alt={post.title} fill className="object-cover" priority />
+          </div>
+        </div>
+      )}
 
       <div className="mt-10 text-lg text-principal/90">
         {esHtmlEnriquecido(post.content) ? (

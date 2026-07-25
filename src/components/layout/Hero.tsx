@@ -8,12 +8,12 @@ type HeroProps = {
 
 export default function Hero({
   eyebrow = "Voz propia, mirada local",
-  title = "Contamos lo que pasa en nuestro territorio.",
+  title = "Pensar, divulgar, informar.",
   description = "Editoriales, audios y datos sobre desarrollo local, educación, tecnología y cultura — pensados para quien quiere entender, no solo enterarse.",
 }: HeroProps) {
   return (
     <section className="relative overflow-hidden border-b border-principal/10">
-      <div className="mx-auto grid max-w-editorial gap-10 px-5 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 lg:py-24">
+      <div className="mx-auto grid max-w-editorial gap-8 px-5 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 lg:py-16">
         <div>
           <p className="eyebrow text-acento">{eyebrow}</p>
           <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight lg:text-6xl">
@@ -41,7 +41,6 @@ export default function Hero({
             </Link>
           </div>
         </div>
-        {/* Marca visual: onda de audio estilizada */}
         <div aria-hidden className="flex h-40 items-end justify-center gap-1.5 lg:h-56">
           {WAVE_HEIGHTS.map((h, i) => (
             <span

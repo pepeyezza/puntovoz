@@ -13,7 +13,7 @@ export default function Hero({
 }: HeroProps) {
   return (
     <section className="relative overflow-hidden border-b border-principal/10">
-      <div className="mx-auto grid max-w-editorial gap-8 px-5 py-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 lg:py-16">
+      <div className="mx-auto grid max-w-editorial gap-8 px-5 py-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8 lg:py-10">
         <div>
           <p className="eyebrow text-acento">{eyebrow}</p>
           <h1 className="mt-4 font-display text-4xl font-medium leading-[1.05] tracking-tight lg:text-6xl">
@@ -21,35 +21,21 @@ export default function Hero({
           </h1>
           <p className="mt-6 max-w-md text-base text-principal/70">{description}</p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="/editoriales"
-              className="rounded-full bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5"
-            >
+            <Link href="/editoriales" className="rounded-full bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5">
               Últimas notas
             </Link>
-            <Link
-              href="/observatorio"
-              className="rounded-full bg-joven px-6 py-3 text-sm font-semibold text-principal transition-transform hover:-translate-y-0.5"
-            >
+            <Link href="/observatorio" className="rounded-full bg-joven px-6 py-3 text-sm font-semibold text-principal transition-transform hover:-translate-y-0.5">
               Data
             </Link>
-            <Link
-              href="/colaboradores"
-              className="rounded-full bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5"
-            >
+            <Link href="/colaboradores" className="rounded-full bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5">
               Colaboradores
             </Link>
           </div>
         </div>
         <div aria-hidden className="flex h-40 items-end justify-center gap-1.5 lg:h-56">
           {WAVE_HEIGHTS.map((h, i) => (
-            <span
-              key={i}
-              className="w-2 rounded-full bg-principal lg:w-3"
-              style={{
-                height: `${h}%`,
-                backgroundColor: i % 5 === 0 ? "var(--color-joven)" : i % 3 === 0 ? "var(--color-acento)" : undefined,
-              }}
+            <span key={i} className="w-2 rounded-full lg:w-3"
+              style={{ height: `${h}%`, backgroundColor: i % 5 === 0 ? "var(--color-joven)" : i % 3 === 0 ? "var(--color-acento)" : "var(--color-principal)" }}
             />
           ))}
         </div>

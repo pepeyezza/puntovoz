@@ -5,13 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { X, Menu } from "lucide-react";
 
+// Color de fondo y texto para cada sección — respeta la paleta de accesos rápidos
 const NAV = [
-  { href: "/editoriales", label: "Editoriales" },
-  { href: "/audios", label: "Audios" },
-  { href: "/videos", label: "Videos" },
-  { href: "/observatorio", label: "Data" },
-  { href: "/colaboradores", label: "Colaboradores" },
-  { href: "/sobre-nosotros", label: ".VOZ" },
+  { href: "/editoriales", label: "Editoriales", bg: "bg-acento", text: "text-secundario" },
+  { href: "/audios", label: "Audios", bg: "bg-joven", text: "text-principal" },
+  { href: "/videos", label: "Videos", bg: "bg-principal", text: "text-secundario" },
+  { href: "/observatorio", label: "Data", bg: "bg-joven", text: "text-principal" },
+  { href: "/colaboradores", label: "Colaboradores", bg: "bg-principal", text: "text-secundario" },
+  { href: "/sobre-nosotros", label: ".VOZ", bg: "bg-acento", text: "text-secundario" },
 ];
 
 export default function Header() {
@@ -27,52 +28,50 @@ export default function Header() {
           <span className="text-acento">.</span>VOZ
         </Link>
 
-        {/* Navegación desktop */}
-        <nav className="hidden gap-7 lg:flex">
+        {/* Navegación desktop — botones coloreados */}
+        <nav className="hidden gap-2 lg:flex">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className="text-sm font-medium text-principal/80 transition-colors hover:text-acento">
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 ${item.bg} ${item.text} opacity-80 hover:opacity-100`}
+            >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link href="/contacto" className="hidden rounded-full bg-principal px-5 py-2 text-sm font-semibold text-secundario transition-transform hover:-translate-y-0.5 lg:inline-block">
+        <Link href="/contacto" className="hidden rounded-full border border-principal/20 px-5 py-2 text-sm font-semibold text-principal transition-colors hover:bg-principal hover:text-secundario lg:inline-block">
           Contacto
         </Link>
 
-        {/* Botón mobile con texto "Menú" */}
+        {/* Botón mobile */}
         <button
           className="flex items-center gap-1.5 rounded-full border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
-          {menuAbierto ? (
-            <>
-              <X size={18} />
-              <span>Cerrar</span>
-            </>
-          ) : (
-            <>
-              <Menu size={18} />
-              <span>Menú</span>
-            </>
-          )}
+          {menuAbierto ? <><X size={18} /><span>Cerrar</span></> : <><Menu size={18} /><span>Menú</span></>}
         </button>
       </div>
 
       {/* Menú mobile desplegable */}
       {menuAbierto && (
         <nav className="border-t border-principal/10 bg-secundario px-5 pb-6 pt-4 lg:hidden">
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {NAV.map((item) => (
               <li key={item.href}>
-                <Link href={item.href} onClick={() => setMenuAbierto(false)} className="block rounded-xl px-4 py-3 text-base font-medium text-principal/80 transition-colors hover:bg-principal/5 hover:text-acento">
+                <Link
+                  href={item.href}
+                  onClick={() => setMenuAbierto(false)}
+                  className={`block rounded-xl px-4 py-3 text-sm font-semibold ${item.bg} ${item.text}`}
+                >
                   {item.label}
                 </Link>
               </li>
             ))}
             <li className="pt-2">
-              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block rounded-full bg-principal px-5 py-3 text-center text-sm font-semibold text-secundario">
+              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block rounded-full border border-principal/20 px-5 py-3 text-center text-sm font-semibold text-principal">
                 Contacto
               </Link>
             </li>

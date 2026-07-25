@@ -37,7 +37,7 @@ async function getHomeData() {
       prisma.indicador.findMany({ orderBy: { updatedAt: "desc" }, take: 3 }),
     ]);
     return {
-      editoriales: posts.length ? posts.map((p) => ({ slug: p.slug, title: p.title, subtitle: p.subtitle ?? "", category: p.categories[0]?.name ?? "", date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }), coverImage: p.coverImage ?? undefined })) : EDITORIALES_DEMO.slice(0, 3),
+      editoriales: posts.length ? posts.map((p) => ({ slug: p.slug, title: p.title, subtitle: p.subtitle ?? "", category: p.categories[0]?.name ?? "", date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }), coverImage: p.coverImage ?? undefined, author: p.author?.name ?? "Redacción .VOZ" })) : EDITORIALES_DEMO.slice(0, 3),
       audios: audios.length ? audios.map((a) => ({ title: a.title, description: a.description ?? "", spotifyUrl: a.spotifyUrl, date: (a.publishedAt ?? a.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) })) : AUDIOS_DEMO.slice(0, 3),
       indicadores: indicadores.length ? indicadores : INDICADORES_DEMO.slice(0, 3),
     };

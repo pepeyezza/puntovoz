@@ -25,37 +25,46 @@ export default function Hero({
 
           {/* Botones en mobile — debajo del texto */}
           <div className="mt-6 flex flex-wrap items-center gap-2 lg:hidden">
-            <Link href="/editoriales" className="bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
+            <Link href="/editoriales" className="rounded-lg bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
               Últimas notas
             </Link>
-            <Link href="/observatorio" className="bg-joven px-6 py-3 text-sm font-semibold text-principal transition-opacity hover:opacity-90">
+            <Link href="/observatorio" className="rounded-lg bg-joven px-6 py-3 text-sm font-semibold text-principal transition-opacity hover:opacity-90">
               Data
             </Link>
-            <Link href="/colaboradores" className="bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
+            <Link href="/colaboradores" className="rounded-lg bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
               Colaboradores
             </Link>
           </div>
-        </div>
 
-        {/* Columna derecha — barras arriba, botones debajo (solo desktop) */}
-        <div className="hidden lg:flex lg:flex-col lg:gap-6">
-          {/* Barras */}
-          <div aria-hidden className="flex h-48 items-end justify-center gap-1.5">
+          {/* Barras en mobile */}
+          <div aria-hidden className="mt-8 flex h-28 items-end justify-center gap-1.5 lg:hidden">
             {WAVE_HEIGHTS.map((h, i) => (
-              <span key={i} className="w-3 rounded-none"
+              <span key={i} className="w-2 rounded-full"
                 style={{ height: `${h}%`, backgroundColor: i % 5 === 0 ? "var(--color-joven)" : i % 3 === 0 ? "var(--color-acento)" : "var(--color-principal)" }}
               />
             ))}
           </div>
-          {/* Botones debajo de las barras — solo desktop */}
-          <div className="flex flex-wrap gap-2">
-            <Link href="/editoriales" className="bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
+        </div>
+
+        {/* Columna derecha — barras arriba, botones centrados debajo (solo desktop) */}
+        <div className="hidden lg:flex lg:flex-col lg:items-center lg:gap-5">
+          {/* Barras */}
+          <div aria-hidden className="flex h-48 w-full items-end justify-center gap-1.5">
+            {WAVE_HEIGHTS.map((h, i) => (
+              <span key={i} className="w-3 rounded-full"
+                style={{ height: `${h}%`, backgroundColor: i % 5 === 0 ? "var(--color-joven)" : i % 3 === 0 ? "var(--color-acento)" : "var(--color-principal)" }}
+              />
+            ))}
+          </div>
+          {/* Botones centrados debajo de las barras */}
+          <div className="flex flex-wrap justify-center gap-2">
+            <Link href="/editoriales" className="rounded-lg bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
               Últimas notas
             </Link>
-            <Link href="/observatorio" className="bg-joven px-6 py-3 text-sm font-semibold text-principal transition-opacity hover:opacity-90">
+            <Link href="/observatorio" className="rounded-lg bg-joven px-6 py-3 text-sm font-semibold text-principal transition-opacity hover:opacity-90">
               Data
             </Link>
-            <Link href="/colaboradores" className="bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
+            <Link href="/colaboradores" className="rounded-lg bg-principal px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
               Colaboradores
             </Link>
           </div>

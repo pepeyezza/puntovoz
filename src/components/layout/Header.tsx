@@ -27,26 +27,26 @@ export default function Header() {
           <span className="text-acento">.</span>VOZ
         </Link>
 
-        {/* Navegación desktop — botones rectangulares coloreados */}
+        {/* Navegación desktop — botones con rounded-lg */}
         <nav className="hidden gap-1.5 lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80 ${item.bg} ${item.text}`}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-80 ${item.bg} ${item.text}`}
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <Link href="/contacto" className="hidden border border-principal/20 px-5 py-2 text-sm font-semibold text-principal transition-colors hover:bg-principal hover:text-secundario lg:inline-block">
+        <Link href="/contacto" className="hidden rounded-lg border border-principal/20 px-5 py-2 text-sm font-semibold text-principal transition-colors hover:bg-principal hover:text-secundario lg:inline-block">
           Contacto
         </Link>
 
         {/* Botón mobile */}
         <button
-          className="flex items-center gap-1.5 border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
+          className="flex items-center gap-1.5 rounded-lg border border-principal/15 px-3 py-2 text-sm font-medium text-principal/80 lg:hidden"
           aria-label={menuAbierto ? "Cerrar menú" : "Abrir menú"}
           onClick={() => setMenuAbierto(!menuAbierto)}
         >
@@ -63,14 +63,14 @@ export default function Header() {
                 <Link
                   href={item.href}
                   onClick={() => setMenuAbierto(false)}
-                  className={`block px-4 py-3 text-sm font-semibold ${item.bg} ${item.text}`}
+                  className={`block rounded-lg px-4 py-3 text-sm font-semibold ${item.bg} ${item.text}`}
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
             <li className="pt-2">
-              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block border border-principal/20 px-5 py-3 text-center text-sm font-semibold text-principal">
+              <Link href="/contacto" onClick={() => setMenuAbierto(false)} className="block rounded-lg border border-principal/20 px-5 py-3 text-center text-sm font-semibold text-principal">
                 Contacto
               </Link>
             </li>

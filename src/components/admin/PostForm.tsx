@@ -33,15 +33,15 @@ export default function PostForm({
 }: PostFormProps) {
   return (
     <form action={action} className="max-w-2xl space-y-5">
-      {showTypeSelector && (
-  <div>
-    <label className="text-sm font-medium">Tipo de publicación</label>
-    <select name="type" defaultValue="COLABORADOR" className="mt-2 w-full rounded-xl border border-principal/15 bg-secundario px-4 py-3 text-sm outline-none focus-visible:border-acento">
-      <option value="COLABORADOR">Colaboración (aparece en mi perfil y en Editoriales)</option>
-      <option value="EDITORIAL">Editorial (aparece directamente en Editoriales)</option>
-    </select>
-  </div>
-)}
+{showTypeSelector && (
+        <div>
+          <label className="text-sm font-medium">Tipo de publicación</label>
+          <select name="type" defaultValue="COLABORADOR" className="mt-2 w-full rounded-xl border border-principal/15 bg-secundario px-4 py-3 text-sm outline-none focus-visible:border-acento">
+            <option value="COLABORADOR">Colaboración (aparece en mi perfil y en Editoriales)</option>
+            <option value="EDITORIAL">Editorial (aparece directamente en Editoriales)</option>
+          </select>
+        </div>
+      )}
       {Object.entries(hiddenFields).map(([key, value]) => (
         <input key={key} type="hidden" name={key} value={value} />
       showTypeSelector = false,

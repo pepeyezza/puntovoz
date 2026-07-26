@@ -28,6 +28,7 @@ orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
       author: p.author?.name ?? "Redacción .VOZ",
       date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
       coverImage: p.coverImage ?? undefined,
+      author: p.author?.name ?? "Redacción .VOZ",
     }));
   } catch {
     return EDITORIALES_DEMO;

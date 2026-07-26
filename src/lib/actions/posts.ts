@@ -31,18 +31,34 @@ export async function createPost(formData: FormData) {
   const authorIdOverride = String(formData.get("authorId") || "");
   await prisma.post.create({
     data: {
-      title, subtitle, content, slug, status, featured, type, coverImage,
+      title,
+      subtitle,
+      content,
+      slug,
+      status,
+      featured,
+      type,
+      coverImage,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
       authorId: authorIdOverride || user.id,
-      categories: categoriaNombre ? { connectOrCreate: { where: { slug: slugify(categoriaNombre) }, create: { name: categoriaNombre, slug: slugify(categoriaNombre) } } } : undefined,
-      tags: { connectOrCreate: tags.map((tag) => ({ where: { slug: slugify(tag) }, create: { name: tag, slug: slugify(tag) } })) },
+      categories: categoriaNombre
+        ? { connectOrCreate: { where: { slug: slugify(categoriaNombre) }, create: { name: categoriaNombre, slug: slugify(categoriaNombre) } } }
+        : undefined,
+      tags: {
+        connectOrCreate: tags.map((tag) => ({
+          where: { slug: slugify(tag) },
+          create: { name: tag, slug: slugify(tag) },
+        })),
+      },
     },
   });
   revalidatePath("/admin/editoriales");
   revalidatePath("/editoriales");
   revalidatePath("/admin/colaboradores");
   revalidatePath("/colaboradores");
-  if (type === "COLABORADOR" && authorIdOverride) redirect(`/admin/colaboradores/${authorIdOverride}`);
+  if (type === "COLABORADOR" && authorIdOverride) {
+    redirect(`/admin/colaboradores/${authorIdOverride}`);
+  }
   redirect("/admin/editoriales");
 }
 
@@ -58,7 +74,12 @@ export async function updatePost(id: string, formData: FormData) {
   await prisma.post.update({
     where: { id },
     data: {
-      title, subtitle, content, status, featured, coverImage,
+      title,
+      subtitle,
+      content,
+      status,
+      featured,
+      coverImage,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
       authorId: existing?.authorId || user.id,
     },
@@ -67,7 +88,9 @@ export async function updatePost(id: string, formData: FormData) {
   revalidatePath("/editoriales");
   revalidatePath("/admin/colaboradores");
   revalidatePath("/colaboradores");
-  if (existing?.type === "COLABORADOR") redirect(`/admin/colaboradores/${existing.authorId}`);
+  if (existing?.type === "COLABORADOR") {
+    redirect(`/admin/colaboradores/${existing.authorId}`);
+  }
   redirect("/admin/editoriales");
 }
 
@@ -76,9 +99,6 @@ export async function deletePost(id: string) {
   await prisma.post.delete({ where: { id } });
   revalidatePath("/admin/editoriales");
   revalidatePath("/editoriales");
-  revalidatePath("/admin/colaboradores");
-  revalidatePath("/colaboradores");
-}
   revalidatePath("/admin/colaboradores");
   revalidatePath("/colaboradores");
 }

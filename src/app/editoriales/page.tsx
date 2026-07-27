@@ -74,7 +74,7 @@ export default async function EditorialesPage({ searchParams }: { searchParams: 
       ) : (
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {editoriales.map((e) => (
-            <ArticleCard key={e.slug} slug={e.slug} title={e.title} subtitle={e.subtitle} category={e.category} date={e.date} coverImage={e.coverImage} />
+            <ArticleCard key={e.slug} slug={e.slug} title={e.title} subtitle={e.subtitle} category={e.category} date={e.date} coverImage={e.coverImage} author={e.author} />
           ))}
         </div>
       )}

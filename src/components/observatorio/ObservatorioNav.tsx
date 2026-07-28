@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { LayoutDashboard, BarChart2, FolderKanban, CalendarDays, GraduationCap, Microscope, Wrench, Mic2, FileText } from "lucide-react";
+import { LayoutDashboard, BarChart2, FolderKanban, CalendarDays, GraduationCap, Microscope, Wrench, FileText } from "lucide-react";
 
 const TABS = [
   { href: "/observatorio", label: "Resumen", icon: LayoutDashboard },
@@ -10,7 +10,6 @@ const TABS = [
   { href: "/observatorio/oferta-academica", label: "Oferta academica", icon: GraduationCap },
   { href: "/observatorio/investigacion", label: "Investigacion", icon: Microscope },
   { href: "/observatorio/herramientas", label: "Herramientas", icon: Wrench },
-  { href: "/observatorio/entrevistas", label: "Entrevistas", icon: Mic2 },
   { href: "/observatorio/notas", label: "Notas", icon: FileText },
 ];
 

@@ -20,27 +20,18 @@ async function getIndicadores() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataIndicadores", {
-    eyebrow: "Data",
-    title: "Indicadores",
-    description: "Principales métricas de desarrollo del partido de Chascomús.",
-  });
+  const header = await getPageHeader("dataIndicadores", { eyebrow: "Data", title: "Indicadores", description: "Principales metricas de desarrollo del partido de Chascomus." });
   const indicadores = await getIndicadores();
-
   return (
     <DataSeccionWrapper seccion="/observatorio/indicadores">
-      <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-        <header className="max-w-2xl">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-joven/20">
-            <BarChart2 size={28} className="text-joven" />
-          </div>
-          <p className="eyebrow mt-4 text-joven">{header.eyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl text-secundario">{header.title}</h1>
-          {header.description && <p className="mt-4 text-secundario/70">{header.description}</p>}
-        </header>
-        <div className="mt-10">
-          <ObservatorioNav active="/observatorio/indicadores" />
+      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+        <p className="eyebrow text-joven">{header.eyebrow}</p>
+        <div className="mt-3"><ObservatorioNav active="/observatorio/indicadores" /></div>
+        <div className="mt-6 flex items-center gap-3">
+          <BarChart2 size={32} className="text-joven" />
+          <h1 className="font-display text-4xl text-secundario">{header.title}</h1>
         </div>
+        {header.description && <p className="mt-3 text-secundario/70">{header.description}</p>}
         <IndicadoresClient indicadores={indicadores} />
       </section>
     </DataSeccionWrapper>

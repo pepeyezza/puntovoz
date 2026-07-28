@@ -25,31 +25,24 @@ async function getProyectos() {
 const TIPOS = ["Todos", "Público", "Privado", "Mixto"];
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
-  const header = await getPageHeader("dataProyectos", {
-    eyebrow: "Data",
-    title: "Proyectos de desarrollo local",
-    description: "Iniciativas publicas, privadas y mixtas del partido.",
-  });
+  const header = await getPageHeader("dataProyectos", { eyebrow: "Data", title: "Proyectos de desarrollo local", description: "Iniciativas publicas, privadas y mixtas del partido." });
   const tipoActivo = searchParams.tipo ?? "Todos";
   const todos = await getProyectos();
   const proyectos = tipoActivo === "Todos" ? todos : todos.filter((p) => p.tipo === tipoActivo);
-
   return (
     <DataSeccionWrapper seccion="/observatorio/proyectos">
-      <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-        <header className="max-w-2xl">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-acento/20">
-            <FolderKanban size={28} className="text-acento" />
-          </div>
-          <p className="eyebrow mt-4 text-acento">{header.eyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl">{header.title}</h1>
-          {header.description && <p className="mt-4 text-principal/70">{header.description}</p>}
-        </header>
-        <div className="mt-10"><ObservatorioNav active="/observatorio/proyectos" /></div>
-        <div className="mt-8 flex flex-wrap gap-2">
+      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+        <p className="eyebrow text-acento">{header.eyebrow}</p>
+        <div className="mt-3"><ObservatorioNav active="/observatorio/proyectos" /></div>
+        <div className="mt-6 flex items-center gap-3">
+          <FolderKanban size={32} className="text-acento" />
+          <h1 className="font-display text-4xl">{header.title}</h1>
+        </div>
+        {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
+        <div className="mt-6 flex flex-wrap gap-2">
           {TIPOS.map((tipo) => (
             <a key={tipo} href={tipo === "Todos" ? "/observatorio/proyectos" : `/observatorio/proyectos?tipo=${encodeURIComponent(tipo)}`}
-              className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${tipoActivo === tipo ? "border-acento bg-acento text-secundario" : "border-principal/15 hover:border-acento hover:text-acento"}`}>
+              className={`rounded-lg border px-4 py-1.5 text-xs font-medium transition-colors ${tipoActivo === tipo ? "border-acento bg-acento text-secundario" : "border-principal/15 hover:border-acento hover:text-acento"}`}>
               {tipo}
             </a>
           ))}
@@ -61,20 +54,20 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
             {proyectos.map((p) => (
               <li key={p.nombre} className="rounded-2xl bg-secundario/60 p-6">
                 <div className="flex items-start gap-4">
-                  {p.imagen ? (
+                  {p.imagen && (
                     <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-principal/10">
                       <Image src={p.imagen} alt={p.nombre} fill className="object-cover" />
                     </div>
-                  ) : null}
+                  )}
                   <div className="flex-1">
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="font-display text-xl">{p.nombre}</p>
                         {p.area && <p className="mt-1 text-sm text-principal/50">{p.area}</p>}
                         {p.descripcion && <p className="mt-3 text-sm text-principal/70">{p.descripcion}</p>}
-                        {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver más</a>}
+                        {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver mas</a>}
                       </div>
-                      <span className="shrink-0 rounded-full bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
+                      <span className="shrink-0 rounded-lg bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
                     </div>
                   </div>
                 </div>

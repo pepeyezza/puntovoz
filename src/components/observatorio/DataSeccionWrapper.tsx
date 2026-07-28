@@ -7,12 +7,8 @@ type Props = {
 
 export default function DataSeccionWrapper({ seccion, children }: Props) {
   const color = SECCION_COLORS[seccion] ?? SECCION_COLORS["/observatorio"];
-
   return (
-    <div
-      className={`min-h-screen ${color.bg} ${color.text}`}
-      style={(color as any).style}
-    >
+    <div className={`min-h-screen ${color.bg} ${color.text}`} style={(color as any).style}>
       {children}
     </div>
   );

@@ -18,27 +18,20 @@ async function get() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataHerramientas", {
-    eyebrow: "Data",
-    title: "Tablero de herramientas",
-    description: "Apps, plataformas e inteligencia artificial para la gestión, comunicación y productividad.",
-  });
+  const header = await getPageHeader("dataHerramientas", { eyebrow: "Data", title: "Tablero de herramientas", description: "Apps, plataformas e inteligencia artificial para la gestion, comunicacion y productividad." });
   const herramientas = await get();
-
   return (
     <DataSeccionWrapper seccion="/observatorio/herramientas">
-      <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-        <header className="max-w-2xl">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-principal/10">
-            <Wrench size={28} className="text-principal/70" />
-          </div>
-          <p className="eyebrow mt-4 text-principal/60">{header.eyebrow}</p>
-          <h1 className="mt-2 font-display text-4xl">{header.title}</h1>
-          {header.description && <p className="mt-4 text-principal/70">{header.description}</p>}
-        </header>
-        <div className="mt-10">
+      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+        <p className="eyebrow" style={{ color: "#6d28d9" }}>{header.eyebrow}</p>
+        <div className="mt-3">
           <ObservatorioNav active="/observatorio/herramientas" />
         </div>
+        <div className="mt-6 flex items-center gap-3">
+          <Wrench size={32} style={{ color: "#6d28d9" }} />
+          <h1 className="font-display text-4xl">{header.title}</h1>
+        </div>
+        {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
         <HerramientasClient herramientas={herramientas} />
       </section>
     </DataSeccionWrapper>

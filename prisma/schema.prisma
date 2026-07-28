@@ -263,3 +263,14 @@ model SiteConfig {
 
   bannerImages  Json?
 }
+model HerramientaTecnologica {
+  id          String   @id @default(cuid())
+  nombre      String
+  slug        String   @unique
+  descripcion String?
+  categoria   String   @default("Otros")
+  logoUrl     String?
+  enlace      String
+  destacada   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}

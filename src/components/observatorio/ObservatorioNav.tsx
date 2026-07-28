@@ -8,11 +8,11 @@ const TABS = [
   { href: "/observatorio/agenda", label: "Agenda" },
   { href: "/observatorio/oferta-academica", label: "Oferta académica" },
   { href: "/observatorio/investigacion", label: "Investigación" },
+  { href: "/observatorio/herramientas", label: "Herramientas" },
   { href: "/observatorio/entrevistas", label: "Entrevistas" },
   { href: "/observatorio/notas", label: "Notas" },
 ];
 
-// Colores de fondo por sección — deben coincidir con los del resumen
 export const SECCION_COLORS: Record<string, { bg: string; text: string; navActive: string; style?: React.CSSProperties }> = {
   "/observatorio": { bg: "bg-secundario", text: "text-principal", navActive: "bg-principal text-secundario" },
   "/observatorio/indicadores": { bg: "bg-principal", text: "text-secundario", navActive: "bg-joven text-principal" },
@@ -20,6 +20,7 @@ export const SECCION_COLORS: Record<string, { bg: string; text: string; navActiv
   "/observatorio/agenda": { bg: "", text: "text-principal", navActive: "bg-[#2d6a4f] text-white", style: { backgroundColor: "#e8f5e9" } },
   "/observatorio/oferta-academica": { bg: "bg-joven/10", text: "text-principal", navActive: "bg-joven text-principal" },
   "/observatorio/investigacion": { bg: "bg-principal/5", text: "text-principal", navActive: "bg-principal text-secundario" },
+  "/observatorio/herramientas": { bg: "bg-principal/5", text: "text-principal", navActive: "bg-principal text-secundario" },
   "/observatorio/entrevistas": { bg: "bg-secundario", text: "text-principal", navActive: "bg-principal text-secundario" },
   "/observatorio/notas": { bg: "bg-secundario", text: "text-principal", navActive: "bg-principal text-secundario" },
 };
@@ -36,7 +37,7 @@ export default function ObservatorioNav({ active }: { active: string }) {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
               isActive
                 ? color.navActive
                 : color.bg === "bg-principal"

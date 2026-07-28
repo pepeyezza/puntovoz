@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -15,24 +14,24 @@ const NAV: NavItem[] = [
   { href: "/admin/observatorio/indicadores", label: "· Indicadores" },
   { href: "/admin/observatorio/proyectos", label: "· Proyectos" },
   { href: "/admin/observatorio/agenda", label: "· Agenda" },
-  { href: "/admin/observatorio/oferta-academica", label: "· Oferta académica" },
-  { href: "/admin/observatorio/investigacion", label: "· Investigación" },
+  { href: "/admin/observatorio/oferta-academica", label: "· Oferta academica" },
+  { href: "/admin/observatorio/investigacion", label: "· Investigacion" },
+  { href: "/admin/observatorio/herramientas", label: "· Herramientas" },
   { href: "/admin/observatorio/entrevistas", label: "· Entrevistas" },
   { href: "/admin/observatorio/notas", label: "· Notas" },
   { href: "/admin/colaboradores", label: "Colaboradores" },
-  { href: "/admin/sobre-nosotros", label: "Sección .VOZ" },
-  { href: "/admin/categorias", label: "Categorías y etiquetas" },
+  { href: "/admin/sobre-nosotros", label: "Seccion .VOZ" },
+  { href: "/admin/categorias", label: "Categorias y etiquetas" },
   { href: "/admin/contacto", label: "Mensajes" },
   { href: "/admin/newsletter", label: "Suscriptores" },
   { href: "/admin/usuarios", label: "Usuarios", rolesPermitidos: ["ADMIN"] },
-  { href: "/admin/configuracion", label: "Configuración", rolesPermitidos: ["ADMIN"] },
+  { href: "/admin/configuracion", label: "Configuracion", rolesPermitidos: ["ADMIN"] },
 ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const role = (session?.user as any)?.role ?? "";
-
   const items = NAV.filter((item) => !item.rolesPermitidos || item.rolesPermitidos.includes(role));
 
   return (

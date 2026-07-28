@@ -15,8 +15,15 @@ export const metadata: Metadata = {
 async function getEditoriales() {
   try {
     const posts = await prisma.post.findMany({
-where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } },
-orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+      where: {
+        status: "PUBLISHED",
+        // Muestra tanto editoriales propios como publicaciones de colaboradores
+        type: { in: ["EDITORIAL", "COLABORADOR"] },
+      },
+      orderBy: [
+        { featured: "desc" }, // Los destacados primero
+        { publishedAt: "desc" },
+      ],
       include: { categories: true, author: true },
     });
     if (posts.length === 0) return EDITORIALES_DEMO;
@@ -25,10 +32,11 @@ orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
       title: p.title,
       subtitle: p.subtitle ?? "",
       category: p.categories[0]?.name ?? "",
-      author: p.author?.name ?? "Redacción .VOZ",
       date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
       coverImage: p.coverImage ?? undefined,
-     
+      featured: p.featured,
+      author: p.author?.name ?? "",
+      isColaborador: p.type === "COLABORADOR",
     }));
   } catch {
     return EDITORIALES_DEMO;
@@ -38,8 +46,8 @@ orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
 export default async function EditorialesPage({ searchParams }: { searchParams: { categoria?: string } }) {
   const header = await getPageHeader("editoriales", {
     eyebrow: "Editoriales",
-    title: "Artículos propios de .VOZ",
-    description: "Análisis y notas de producción propia.",
+    title: "Artículos de .VOZ",
+    description: "Producciones propias y voces colaboradoras.",
   });
   const categoriaActiva = searchParams.categoria ?? "Todas";
   const todos = await getEditoriales();
@@ -58,7 +66,7 @@ export default async function EditorialesPage({ searchParams }: { searchParams: 
           <a
             key={cat}
             href={cat === "Todas" ? "/editoriales" : `/editoriales?categoria=${encodeURIComponent(cat)}`}
-            className={`rounded-full border px-5 py-2 text-sm font-medium transition-colors ${
+            className={`rounded-lg border px-5 py-2 text-sm font-medium transition-colors ${
               categoriaActiva === cat
                 ? "border-acento bg-acento text-secundario"
                 : "border-principal/15 hover:border-acento hover:text-acento"
@@ -70,11 +78,21 @@ export default async function EditorialesPage({ searchParams }: { searchParams: 
       </div>
 
       {editoriales.length === 0 ? (
-        <p className="mt-12 text-principal/60">No hay editoriales publicados en esta categoría.</p>
+        <p className="mt-12 text-principal/60">No hay publicaciones en esta categoría.</p>
       ) : (
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {editoriales.map((e) => (
-            <ArticleCard key={e.slug} slug={e.slug} title={e.title} subtitle={e.subtitle} category={e.category} date={e.date} coverImage={e.coverImage} author={e.author} />
+            <ArticleCard
+              key={e.slug}
+              slug={e.slug}
+              title={e.title}
+              subtitle={e.subtitle}
+              category={e.category}
+              date={e.date}
+              coverImage={e.coverImage}
+              featured={(e as any).featured}
+              author={(e as any).isColaborador ? (e as any).author : undefined}
+            />
           ))}
         </div>
       )}

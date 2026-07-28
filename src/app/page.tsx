@@ -32,13 +32,31 @@ async function getConfig() {
 async function getHomeData() {
   try {
     const [posts, audios, indicadores] = await Promise.all([
-      prisma.post.findMany({ where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } }, orderBy: [{ featured: "desc" }, { publishedAt: "desc" }], take: 3, include: { categories: true, author: true } }),
+      prisma.post.findMany({
+        where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } },
+        orderBy: [{ featured: "desc" }, { publishedAt: "desc" }],
+        take: 3,
+        include: { categories: true, author: true },
+      }),
       prisma.audio.findMany({ where: { status: "PUBLISHED" }, orderBy: { publishedAt: "desc" }, take: 3 }),
       prisma.indicador.findMany({ orderBy: { updatedAt: "desc" }, take: 3 }),
     ]);
     return {
-      editoriales: posts.length ? posts.map((p) => ({ slug: p.slug, title: p.title, subtitle: p.subtitle ?? "", category: p.categories[0]?.name ?? "", date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }), coverImage: p.coverImage ?? undefined, author: p.author?.name ?? "Redacción .VOZ" })) : EDITORIALES_DEMO.slice(0, 3),
-      audios: audios.length ? audios.map((a) => ({ title: a.title, description: a.description ?? "", spotifyUrl: a.spotifyUrl, date: (a.publishedAt ?? a.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) })) : AUDIOS_DEMO.slice(0, 3),
+      editoriales: posts.length
+        ? posts.map((p) => ({
+            slug: p.slug,
+            title: p.title,
+            subtitle: p.subtitle ?? "",
+            category: p.categories[0]?.name ?? "",
+            date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
+            coverImage: p.coverImage ?? undefined,
+            featured: p.featured,
+            author: p.author?.name ?? "Redacción .VOZ",
+          }))
+        : EDITORIALES_DEMO.slice(0, 3),
+      audios: audios.length
+        ? audios.map((a) => ({ title: a.title, description: a.description ?? "", spotifyUrl: a.spotifyUrl, date: (a.publishedAt ?? a.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }) }))
+        : AUDIOS_DEMO.slice(0, 3),
       indicadores: indicadores.length ? indicadores : INDICADORES_DEMO.slice(0, 3),
     };
   } catch {
@@ -52,19 +70,15 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Banner de fotos — entre el nav y el hero */}
-      {config.bannerImages.length > 0 && (
-        <BannerCarousel images={config.bannerImages} />
-      )}
+      {config.bannerImages.length > 0 && <BannerCarousel images={config.bannerImages} />}
 
       <Hero eyebrow={config.eyebrow} title={config.title} description={config.description} />
 
-      {/* Últimos editoriales */}
       <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
             <p className="eyebrow text-acento">Recién publicado</p>
-            <h2 className="mt-2 font-display text-3xl">Últimos editoriales</h2>
+            <h2 className="mt-2 font-display text-3xl">Últimas publicaciones</h2>
           </div>
           <div className="hidden items-center gap-4 sm:flex">
             <Link href="/observatorio" className="text-sm font-medium text-principal/60 hover:text-acento">Data →</Link>
@@ -72,18 +86,19 @@ export default async function HomePage() {
             <Link href="/editoriales" className="text-sm font-semibold hover:text-acento">Ver todos →</Link>
           </div>
         </div>
-        <div className="mt-10 grid gap-10 lg:grid-cols-3">
-          {editoriales.map((a, i) => <ArticleCard key={a.slug} {...a} size={i === 0 ? "large" : "default"} />)}
+        <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {editoriales.map((a, i) => (
+            <ArticleCard key={a.slug} {...a} size={i === 0 ? "large" : "default"} />
+          ))}
         </div>
       </section>
 
-      {/* Explorá por tema */}
       <section className="border-y border-principal/10 bg-principal/[0.03] py-12">
         <div className="mx-auto max-w-editorial px-5 lg:px-8">
           <p className="eyebrow text-acento">Explorá por tema</p>
           <div className="mt-5 flex flex-wrap gap-3">
             {CATEGORIAS_VOZ.map((cat) => (
-              <Link key={cat} href={`/editoriales?categoria=${encodeURIComponent(cat)}`} className="rounded-full border border-principal/15 px-5 py-2 text-sm font-medium transition-colors hover:border-acento hover:text-acento">
+              <Link key={cat} href={`/editoriales?categoria=${encodeURIComponent(cat)}`} className="rounded-lg border border-principal/15 px-5 py-2 text-sm font-medium transition-colors hover:border-acento hover:text-acento">
                 {cat}
               </Link>
             ))}
@@ -91,7 +106,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Últimos audios */}
       <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
@@ -107,7 +121,6 @@ export default async function HomePage() {
 
       <ObservatorioPreview indicadores={indicadores} titulo={config.dataTitle} linkLabel={config.dataSubtitle} />
 
-      {/* Quiénes somos */}
       <section className="mx-auto max-w-editorial px-5 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>

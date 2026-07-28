@@ -2,26 +2,21 @@ export const dynamic = "force-dynamic";
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BarChart2, FolderKanban, CalendarDays, GraduationCap, Microscope, Mic2, FileText } from "lucide-react";
+import { BarChart2, FolderKanban, CalendarDays, GraduationCap, Microscope, Wrench, Mic2, FileText } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
-import {
-  INDICADORES_DEMO,
-  ENTREVISTAS_DEMO,
-  PROYECTOS_DEMO,
-  AGENDA_DEMO,
-  NOTAS_OBSERVATORIO_DEMO,
-} from "@/lib/demo-data";
+import { INDICADORES_DEMO, ENTREVISTAS_DEMO, PROYECTOS_DEMO, AGENDA_DEMO, NOTAS_OBSERVATORIO_DEMO } from "@/lib/demo-data";
+import { HERRAMIENTAS_DEMO } from "@/lib/herramientas";
 
 export const metadata: Metadata = {
   title: "Data · Chascomús",
-  description: "Indicadores, proyectos, agenda, oferta académica e investigación científica de Chascomús.",
+  description: "Indicadores, proyectos, agenda, oferta académica, investigación y herramientas de Chascomús.",
 };
 
 async function getResumen() {
   try {
-    const [indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas] = await Promise.all([
+    const [indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas, herramientas] = await Promise.all([
       prisma.indicador.findMany({ orderBy: { updatedAt: "desc" }, take: 4 }),
       prisma.proyectoLocal.findMany({ orderBy: { createdAt: "desc" }, take: 4 }),
       prisma.eventoAgenda.findMany({ orderBy: { fecha: "asc" }, take: 3 }),
@@ -29,6 +24,7 @@ async function getResumen() {
       prisma.notaObservatorio.findMany({ where: { status: "PUBLISHED" }, orderBy: { publishedAt: "desc" }, take: 2 }),
       prisma.institucionAcademica.findMany({ orderBy: { nombre: "asc" }, take: 3, include: { _count: { select: { carreras: true } } } }),
       prisma.institucionCientifica.findMany({ orderBy: { nombre: "asc" }, take: 3, include: { _count: { select: { servicios: true } } } }),
+      (prisma as any).herramientaTecnologica.findMany({ orderBy: { nombre: "asc" }, take: 6 }).catch(() => []),
     ]);
 
     return {
@@ -40,13 +36,14 @@ async function getResumen() {
         ? agenda.map((ev) => ({ titulo: ev.titulo, fecha: ev.fecha.toLocaleDateString("es-AR", { day: "numeric", month: "long" }), lugar: ev.lugar ?? "" }))
         : AGENDA_DEMO,
       entrevistas: entrevistas.length
-        ? entrevistas.map((e) => ({ slug: e.slug, entrevistado: e.entrevistado, cargo: e.cargo ?? "", resumen: e.resumen, date: (e.publishedAt ?? e.createdAt).toLocaleDateString("es-AR") }))
+        ? entrevistas.map((e) => ({ slug: e.slug, entrevistado: e.entrevistado, cargo: e.cargo ?? "", resumen: e.resumen }))
         : ENTREVISTAS_DEMO,
       notas: notas.length
-        ? notas.map((n) => ({ slug: n.slug, titulo: n.titulo, resumen: n.contenido.replace(/<[^>]+>/g, "").slice(0, 120), date: (n.publishedAt ?? n.createdAt).toLocaleDateString("es-AR") }))
+        ? notas.map((n) => ({ slug: n.slug, titulo: n.titulo, resumen: n.contenido.replace(/<[^>]+>/g, "").slice(0, 120) }))
         : NOTAS_OBSERVATORIO_DEMO,
       instituciones,
       cientificas,
+      herramientas: herramientas.length ? herramientas : HERRAMIENTAS_DEMO.slice(0, 6),
     };
   } catch {
     return {
@@ -57,8 +54,24 @@ async function getResumen() {
       notas: NOTAS_OBSERVATORIO_DEMO,
       instituciones: [],
       cientificas: [],
+      herramientas: HERRAMIENTAS_DEMO.slice(0, 6),
     };
   }
+}
+
+// Componente de encabezado de sección con botón "ver todo" al lado
+function SeccionHeader({ titulo, href, icono }: { titulo: string; href: string; icono: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        {icono}
+        <h2 className="font-display text-2xl">{titulo}</h2>
+      </div>
+      <Link href={href} className="rounded-lg border border-current px-4 py-1.5 text-sm font-semibold opacity-70 transition-opacity hover:opacity-100">
+        Ver todo →
+      </Link>
+    </div>
+  );
 }
 
 export default async function ObservatorioPage() {
@@ -67,7 +80,7 @@ export default async function ObservatorioPage() {
     title: "Observatorio de Chascomús",
     description: "Un espacio de seguimiento del desarrollo local.",
   });
-  const { indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas } = await getResumen();
+  const { indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas, herramientas } = await getResumen();
 
   return (
     <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
@@ -83,13 +96,7 @@ export default async function ObservatorioPage() {
 
       {/* INDICADORES */}
       <div className="mt-10 rounded-3xl bg-principal p-8 text-secundario">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <BarChart2 size={24} className="text-joven" />
-            <h2 className="font-display text-2xl">Indicadores</h2>
-          </div>
-          <Link href="/observatorio/indicadores" className="text-sm font-semibold text-joven hover:opacity-80">Ver todos →</Link>
-        </div>
+        <SeccionHeader titulo="Indicadores" href="/observatorio/indicadores" icono={<BarChart2 size={24} className="text-joven" />} />
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {indicadores.map((ind) => (
             <div key={ind.nombre + ind.periodo} className="rounded-2xl border border-secundario/15 p-5">
@@ -106,13 +113,7 @@ export default async function ObservatorioPage() {
 
       {/* PROYECTOS */}
       <div className="mt-6 rounded-3xl bg-acento/10 p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <FolderKanban size={24} className="text-acento" />
-            <h2 className="font-display text-2xl">Proyectos</h2>
-          </div>
-          <Link href="/observatorio/proyectos" className="text-sm font-semibold text-acento hover:opacity-80">Ver todos →</Link>
-        </div>
+        <SeccionHeader titulo="Proyectos" href="/observatorio/proyectos" icono={<FolderKanban size={24} className="text-acento" />} />
         <ul className="mt-6 space-y-3">
           {proyectos.map((p) => (
             <li key={p.nombre} className="flex items-center justify-between rounded-xl bg-secundario/60 px-5 py-3">
@@ -120,7 +121,7 @@ export default async function ObservatorioPage() {
                 <p className="text-sm font-medium">{p.nombre}</p>
                 <p className="text-xs text-principal/50">{p.area}</p>
               </div>
-              <span className="rounded-full bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
+              <span className="rounded-lg bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
             </li>
           ))}
         </ul>
@@ -133,7 +134,9 @@ export default async function ObservatorioPage() {
             <CalendarDays size={24} style={{ color: "#2d6a4f" }} />
             <h2 className="font-display text-2xl" style={{ color: "#2d6a4f" }}>Agenda cultural</h2>
           </div>
-          <Link href="/observatorio/agenda" className="text-sm font-semibold hover:opacity-80" style={{ color: "#2d6a4f" }}>Ver toda →</Link>
+          <Link href="/observatorio/agenda" className="rounded-lg border px-4 py-1.5 text-sm font-semibold opacity-70 transition-opacity hover:opacity-100" style={{ borderColor: "#2d6a4f", color: "#2d6a4f" }}>
+            Ver todo →
+          </Link>
         </div>
         <ul className="mt-6 space-y-3">
           {agenda.map((ev) => (
@@ -147,13 +150,7 @@ export default async function ObservatorioPage() {
 
       {/* OFERTA ACADÉMICA */}
       <div className="mt-6 rounded-3xl bg-joven/10 p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <GraduationCap size={24} className="text-principal/70" />
-            <h2 className="font-display text-2xl">Oferta académica</h2>
-          </div>
-          <Link href="/observatorio/oferta-academica" className="text-sm font-semibold text-joven hover:opacity-80">Ver todo →</Link>
-        </div>
+        <SeccionHeader titulo="Oferta académica" href="/observatorio/oferta-academica" icono={<GraduationCap size={24} className="text-principal/70" />} />
         {instituciones.length === 0 ? (
           <p className="mt-4 text-sm text-principal/50">Todavía no hay instituciones cargadas.</p>
         ) : (
@@ -170,15 +167,9 @@ export default async function ObservatorioPage() {
         )}
       </div>
 
-      {/* INVESTIGACIÓN CIENTÍFICA */}
+      {/* INVESTIGACIÓN */}
       <div className="mt-6 rounded-3xl bg-principal/5 p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Microscope size={24} className="text-principal/70" />
-            <h2 className="font-display text-2xl">Investigación científica</h2>
-          </div>
-          <Link href="/observatorio/investigacion" className="text-sm font-semibold hover:text-acento">Ver todo →</Link>
-        </div>
+        <SeccionHeader titulo="Investigación científica" href="/observatorio/investigacion" icono={<Microscope size={24} className="text-principal/70" />} />
         {cientificas.length === 0 ? (
           <p className="mt-4 text-sm text-principal/50">Todavía no hay instituciones cargadas.</p>
         ) : (
@@ -195,15 +186,28 @@ export default async function ObservatorioPage() {
         )}
       </div>
 
+      {/* HERRAMIENTAS */}
+      <div className="mt-6 rounded-3xl bg-principal/5 p-8">
+        <SeccionHeader titulo="Tablero de herramientas" href="/observatorio/herramientas" icono={<Wrench size={24} className="text-principal/70" />} />
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {herramientas.map((h: any) => (
+            <a key={h.id} href={h.enlace} target="_blank" rel="noreferrer"
+              className="flex items-center gap-3 rounded-xl bg-secundario/80 px-4 py-3 transition-colors hover:bg-secundario">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-principal/10 font-display text-sm font-bold text-principal/40">
+                {h.nombre.charAt(0)}
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-medium">{h.nombre}</p>
+                <p className="truncate text-xs text-principal/50">{h.categoria}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+
       {/* ENTREVISTAS */}
       <div className="mt-6 rounded-3xl border border-principal/10 p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Mic2 size={24} className="text-principal/60" />
-            <h2 className="font-display text-2xl">Entrevistas</h2>
-          </div>
-          <Link href="/observatorio/entrevistas" className="text-sm font-semibold hover:text-acento">Ver todas →</Link>
-        </div>
+        <SeccionHeader titulo="Entrevistas" href="/observatorio/entrevistas" icono={<Mic2 size={24} className="text-principal/60" />} />
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {entrevistas.map((e) => (
             <Link key={e.slug} href={`/observatorio/entrevistas/${e.slug}`} className="block rounded-2xl border border-principal/10 bg-secundario/50 p-5 transition-colors hover:border-acento">
@@ -217,19 +221,12 @@ export default async function ObservatorioPage() {
 
       {/* NOTAS */}
       <div className="mt-6 rounded-3xl border border-principal/10 p-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <FileText size={24} className="text-principal/60" />
-            <h2 className="font-display text-2xl">Notas del Observatorio</h2>
-          </div>
-          <Link href="/observatorio/notas" className="text-sm font-semibold hover:text-acento">Ver todas →</Link>
-        </div>
+        <SeccionHeader titulo="Notas del Observatorio" href="/observatorio/notas" icono={<FileText size={24} className="text-principal/60" />} />
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {notas.map((n) => (
             <Link key={n.slug} href={`/observatorio/notas/${n.slug}`} className="block rounded-2xl border border-principal/10 bg-secundario/50 p-5 transition-colors hover:border-acento">
               <p className="font-display text-lg">{n.titulo}</p>
               <p className="mt-2 text-sm text-principal/60">{n.resumen}</p>
-              <p className="mt-2 text-xs text-principal/40">{n.date}</p>
             </Link>
           ))}
         </div>

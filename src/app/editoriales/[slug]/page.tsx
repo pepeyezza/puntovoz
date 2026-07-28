@@ -17,7 +17,7 @@ async function getEditorial(slug: string) {
       where: { slug },
       include: { categories: true, tags: true, author: true },
     });
-if (post && post.type !== null) {
+    if (post && post.type !== null) {
       return {
         title: post.title,
         subtitle: post.subtitle ?? "",
@@ -25,21 +25,25 @@ if (post && post.type !== null) {
         category: post.categories[0]?.name ?? "",
         tags: post.tags.map((t) => t.name),
         author: post.author?.name ?? "Redacción .VOZ",
+        authorId: post.author?.id ?? null,
         date: (post.publishedAt ?? post.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
         coverImage: post.coverImage ?? "",
+        featured: post.featured,
       };
     }
   } catch { /* sigue al fallback */ }
-  return EDITORIALES_DEMO.find((e) => e.slug === slug) ?? null;
+  const demo = EDITORIALES_DEMO.find((e) => e.slug === slug) ?? null;
+  if (!demo) return null;
+  return { ...demo, author: "Redacción .VOZ", authorId: null, featured: false, coverImage: demo.coverImage ?? "" };
 }
 
 async function getRelacionados(slugActual: string) {
   try {
     const posts = await prisma.post.findMany({
-where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] }, slug: { not: slugActual } },
+      where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] }, slug: { not: slugActual } },
       orderBy: { publishedAt: "desc" },
       take: 2,
-      include: { categories: true },
+      include: { categories: true, author: true },
     });
     if (posts.length > 0) {
       return posts.map((p) => ({
@@ -49,6 +53,7 @@ where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] }, slug: 
         category: p.categories[0]?.name ?? "",
         date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR"),
         coverImage: p.coverImage ?? undefined,
+        author: p.author?.name ?? "Redacción .VOZ",
       }));
     }
   } catch { /* sigue al fallback */ }
@@ -70,25 +75,39 @@ export default async function EditorialDetailPage({ params }: Props) {
     <article>
       <header className="mx-auto max-w-2xl px-5 pt-16 lg:px-8">
         <Link href="/editoriales" className="text-sm font-medium text-principal/60 hover:text-acento">← Editoriales</Link>
-        <p className="eyebrow mt-6 text-acento">{editorial.category}</p>
+        {editorial.category && <p className="eyebrow mt-6 text-acento">{editorial.category}</p>}
         <h1 className="mt-3 font-display text-4xl leading-tight lg:text-5xl">{editorial.title}</h1>
-        <p className="mt-4 text-lg text-principal/70">{editorial.subtitle}</p>
-        <div className="mt-6 flex items-center gap-3 text-sm text-principal/50">
-          <span>{editorial.author}</span>
-          <span aria-hidden>·</span>
-          <span>{editorial.date}</span>
+        {editorial.subtitle && <p className="mt-4 text-lg text-principal/70">{editorial.subtitle}</p>}
+
+        {/* Autor — siempre visible */}
+        <div className="mt-6 flex items-center gap-3">
+          {editorial.authorId ? (
+            <Link href={`/colaboradores/${editorial.authorId}`} className="flex items-center gap-2 hover:text-acento transition-colors">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acento">
+                {editorial.author.charAt(0)}
+              </span>
+              <span className="text-sm font-medium">{editorial.author}</span>
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-principal/10 text-xs font-bold text-principal/60">
+                {editorial.author.charAt(0)}
+              </span>
+              <span className="text-sm font-medium text-principal/70">{editorial.author}</span>
+            </div>
+          )}
+          <span aria-hidden className="text-principal/30">·</span>
+          <span className="text-sm text-principal/50">{editorial.date}</span>
         </div>
       </header>
 
-      <div className="mx-auto mt-10 max-w-editorial overflow-hidden rounded-2xl">
-        {editorial.coverImage ? (
+      {editorial.coverImage && (
+        <div className="mx-auto mt-10 max-w-editorial overflow-hidden rounded-2xl">
           <div className="relative aspect-[16/9] w-full">
             <Image src={editorial.coverImage} alt={editorial.title} fill className="object-cover" priority />
           </div>
-        ) : (
-          <div className="flex aspect-[16/9] items-center justify-center bg-principal/5 text-principal/30">.VOZ</div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="mx-auto max-w-2xl px-5 py-12 lg:px-8">
         {esHtmlEnriquecido(editorial.content) ? (
@@ -98,10 +117,11 @@ export default async function EditorialDetailPage({ params }: Props) {
             {editorial.content.split("\n\n").map((p, i) => <p key={i}>{p}</p>)}
           </div>
         )}
+
         {editorial.tags && editorial.tags.length > 0 && (
           <div className="mt-10 flex flex-wrap gap-2">
             {editorial.tags.map((tag) => (
-              <span key={tag} className="rounded-full bg-principal/5 px-4 py-1.5 text-xs font-medium text-principal/60">#{tag}</span>
+              <span key={tag} className="rounded-lg bg-principal/5 px-4 py-1.5 text-xs font-medium text-principal/60">#{tag}</span>
             ))}
           </div>
         )}
@@ -112,7 +132,7 @@ export default async function EditorialDetailPage({ params }: Props) {
           <p className="eyebrow text-acento">Contenido relacionado</p>
           <div className="mt-8 grid gap-10 sm:grid-cols-2">
             {relacionados.map((r) => (
-              <ArticleCard key={r.slug} slug={r.slug} title={r.title} subtitle={r.subtitle} category={r.category} date={r.date} coverImage={r.coverImage} />
+              <ArticleCard key={r.slug} slug={r.slug} title={r.title} subtitle={r.subtitle} category={r.category} date={r.date} coverImage={r.coverImage} author={(r as any).author} />
             ))}
           </div>
         </section>

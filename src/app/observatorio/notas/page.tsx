@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
+import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 import { NOTAS_OBSERVATORIO_DEMO } from "@/lib/demo-data";
@@ -18,33 +19,30 @@ async function getNotas() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataNotas", {
-    eyebrow: "Data",
-    title: "Notas sobre desarrollo local",
-    description: "Analisis propios que cruzan datos, proyectos y contexto del partido.",
-  });
+  const header = await getPageHeader("dataNotas", { eyebrow: "Data", title: "Notas sobre desarrollo local", description: "Analisis propios que cruzan datos, proyectos y contexto del partido." });
   const notas = await getNotas();
-
   return (
-    <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-      <header className="max-w-2xl">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-principal/5">
-          <FileText size={28} className="text-principal/60" />
+    <DataSeccionWrapper seccion="/observatorio/notas">
+      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+        <p className="eyebrow text-principal/60">{header.eyebrow}</p>
+        <div className="mt-3">
+          <ObservatorioNav active="/observatorio/notas" />
         </div>
-        <p className="eyebrow mt-4 text-acento">{header.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl">{header.title}</h1>
-        {header.description && <p className="mt-4 text-principal/70">{header.description}</p>}
-      </header>
-      <div className="mt-10"><ObservatorioNav active="/observatorio/notas" /></div>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2">
-        {notas.map((n) => (
-          <Link key={n.slug} href={`/observatorio/notas/${n.slug}`} className="block rounded-2xl border border-principal/10 p-6 transition-colors hover:border-acento">
-            <p className="font-display text-xl">{n.titulo}</p>
-            <p className="mt-2 text-sm text-principal/60">{n.resumen}</p>
-            <p className="mt-3 text-xs text-principal/40">{n.date}</p>
-          </Link>
-        ))}
-      </div>
-    </section>
+        <div className="mt-6 flex items-center gap-3">
+          <FileText size={32} className="text-principal/70" />
+          <h1 className="font-display text-4xl">{header.title}</h1>
+        </div>
+        {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
+        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+          {notas.map((n) => (
+            <Link key={n.slug} href={`/observatorio/notas/${n.slug}`} className="block rounded-2xl border border-joven/30 bg-secundario/60 p-6 transition-colors hover:border-joven">
+              <p className="font-display text-xl">{n.titulo}</p>
+              <p className="mt-2 text-sm text-principal/60">{n.resumen}</p>
+              <p className="mt-3 text-xs text-principal/40">{n.date}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+    </DataSeccionWrapper>
   );
 }

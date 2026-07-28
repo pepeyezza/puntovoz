@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 async function getResumen() {
   try {
-    const [indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas, herramientas] = await Promise.all([
+    const [indicadores, proyectos, agenda, entrevistas, notas, instituciones, cientificas] = await Promise.all([
       prisma.indicador.findMany({ orderBy: { updatedAt: "desc" }, take: 4 }),
       prisma.proyectoLocal.findMany({ orderBy: { createdAt: "desc" }, take: 4 }),
       prisma.eventoAgenda.findMany({ orderBy: { fecha: "asc" }, take: 3 }),
@@ -24,8 +24,16 @@ async function getResumen() {
       prisma.notaObservatorio.findMany({ where: { status: "PUBLISHED" }, orderBy: { publishedAt: "desc" }, take: 2 }),
       prisma.institucionAcademica.findMany({ orderBy: { nombre: "asc" }, take: 3, include: { _count: { select: { carreras: true } } } }),
       prisma.institucionCientifica.findMany({ orderBy: { nombre: "asc" }, take: 3, include: { _count: { select: { servicios: true } } } }),
-      (prisma as any).herramientaTecnologica.findMany({ orderBy: { nombre: "asc" }, take: 6 }).catch(() => []),
     ]);
+
+    // Herramientas en su propio try-catch para no romper el resto
+    let herramientas: any[] = [];
+    try {
+      const h = await (prisma as any).herramientaTecnologica.findMany({ orderBy: { nombre: "asc" }, take: 6 });
+      herramientas = h.length ? h : HERRAMIENTAS_DEMO.slice(0, 6);
+    } catch {
+      herramientas = HERRAMIENTAS_DEMO.slice(0, 6);
+    }
 
     return {
       indicadores: indicadores.length ? indicadores : INDICADORES_DEMO,
@@ -43,9 +51,14 @@ async function getResumen() {
         : NOTAS_OBSERVATORIO_DEMO,
       instituciones,
       cientificas,
-      herramientas: herramientas.length ? herramientas : HERRAMIENTAS_DEMO.slice(0, 6),
+      herramientas,
     };
   } catch {
+    let herramientas: any[] = HERRAMIENTAS_DEMO.slice(0, 6);
+    try {
+      const h = await (prisma as any).herramientaTecnologica.findMany({ take: 6 });
+      if (h.length) herramientas = h;
+    } catch {}
     return {
       indicadores: INDICADORES_DEMO,
       proyectos: PROYECTOS_DEMO.map((p) => ({ ...p, tipo: "Público" })),
@@ -54,20 +67,18 @@ async function getResumen() {
       notas: NOTAS_OBSERVATORIO_DEMO,
       instituciones: [],
       cientificas: [],
-      herramientas: HERRAMIENTAS_DEMO.slice(0, 6),
+      herramientas,
     };
   }
 }
 
-// Componente de encabezado de sección con botón "ver todo" al lado
+// Botón "Ver todo" pegado al título — no en el extremo opuesto
 function SeccionHeader({ titulo, href, icono }: { titulo: string; href: string; icono: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        {icono}
-        <h2 className="font-display text-2xl">{titulo}</h2>
-      </div>
-      <Link href={href} className="rounded-lg border border-current px-4 py-1.5 text-sm font-semibold opacity-70 transition-opacity hover:opacity-100">
+    <div className="flex flex-wrap items-center gap-3">
+      {icono}
+      <h2 className="font-display text-2xl">{titulo}</h2>
+      <Link href={href} className="rounded-lg border border-current px-3 py-1 text-sm font-semibold opacity-60 transition-opacity hover:opacity-100">
         Ver todo →
       </Link>
     </div>
@@ -90,7 +101,7 @@ export default async function ObservatorioPage() {
         <p className="mt-4 text-principal/70">{header.description}</p>
       </header>
 
-      <div className="mt-10">
+      <div className="mt-6">
         <ObservatorioNav active="/observatorio" />
       </div>
 
@@ -129,12 +140,10 @@ export default async function ObservatorioPage() {
 
       {/* AGENDA */}
       <div className="mt-6 rounded-3xl p-8" style={{ backgroundColor: "#e8f5e9" }}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <CalendarDays size={24} style={{ color: "#2d6a4f" }} />
-            <h2 className="font-display text-2xl" style={{ color: "#2d6a4f" }}>Agenda cultural</h2>
-          </div>
-          <Link href="/observatorio/agenda" className="rounded-lg border px-4 py-1.5 text-sm font-semibold opacity-70 transition-opacity hover:opacity-100" style={{ borderColor: "#2d6a4f", color: "#2d6a4f" }}>
+        <div className="flex flex-wrap items-center gap-3">
+          <CalendarDays size={24} style={{ color: "#2d6a4f" }} />
+          <h2 className="font-display text-2xl" style={{ color: "#2d6a4f" }}>Agenda cultural</h2>
+          <Link href="/observatorio/agenda" className="rounded-lg border px-3 py-1 text-sm font-semibold opacity-60 transition-opacity hover:opacity-100" style={{ borderColor: "#2d6a4f", color: "#2d6a4f" }}>
             Ver todo →
           </Link>
         </div>

@@ -18,16 +18,14 @@ async function get() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataHerramientas", { eyebrow: "Data", title: "Tablero de herramientas", description: "Apps, plataformas e inteligencia artificial para la gestion, comunicacion y productividad." });
+  const header = await getPageHeader("dataHerramientas", { eyebrow: "Data", title: "Tablero de herramientas", description: "Apps, plataformas e inteligencia artificial para la gestión, comunicación y productividad." });
   const herramientas = await get();
   return (
     <DataSeccionWrapper seccion="/observatorio/herramientas">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow" style={{ color: "#6d28d9" }}>{header.eyebrow}</p>
-        <div className="mt-3">
-          <ObservatorioNav active="/observatorio/herramientas" />
-        </div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/herramientas" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <Wrench size={32} style={{ color: "#6d28d9" }} />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>

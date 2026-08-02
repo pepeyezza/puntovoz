@@ -19,16 +19,14 @@ async function getNotas() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataNotas", { eyebrow: "Data", title: "Notas sobre desarrollo local", description: "Analisis propios que cruzan datos, proyectos y contexto del partido." });
+  const header = await getPageHeader("dataNotas", { eyebrow: "Data", title: "Notas sobre desarrollo local", description: "Análisis propios que cruzan datos, proyectos y contexto del partido." });
   const notas = await getNotas();
   return (
     <DataSeccionWrapper seccion="/observatorio/notas">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow text-principal/60">{header.eyebrow}</p>
-        <div className="mt-3">
-          <ObservatorioNav active="/observatorio/notas" />
-        </div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/notas" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <FileText size={32} className="text-principal/70" />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>

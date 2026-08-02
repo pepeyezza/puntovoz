@@ -23,20 +23,20 @@ async function getAgenda() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataAgenda", { eyebrow: "Data", title: "Agenda cultural", description: "Proximas actividades, ferias y encuentros comunitarios del partido." });
+  const header = await getPageHeader("dataAgenda", { eyebrow: "Data", title: "Agenda cultural", description: "Próximas actividades, ferias y encuentros comunitarios del partido." });
   const agenda = await getAgenda();
   return (
     <DataSeccionWrapper seccion="/observatorio/agenda">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow" style={{ color: VERDE }}>{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/agenda" /></div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/agenda" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <CalendarDays size={32} style={{ color: VERDE }} />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>
         {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
         {agenda.length === 0 ? (
-          <p className="mt-10 text-principal/50">Todavia no hay eventos cargados.</p>
+          <p className="mt-10 text-principal/50">Todavía no hay eventos cargados.</p>
         ) : (
           <ol className="mt-10 space-y-6 border-l-2 pl-6" style={{ borderColor: VERDE }}>
             {agenda.map((ev) => (
@@ -52,7 +52,7 @@ export default async function Page() {
                   <p className="mt-1 font-display text-xl">{ev.titulo}</p>
                   {ev.descripcion && <p className="mt-1 text-sm text-principal/70">{ev.descripcion}</p>}
                   <p className="mt-1 text-sm text-principal/50">{ev.lugar}{ev.categoria ? ` - ${ev.categoria}` : ""}</p>
-                  {ev.enlace && <a href={ev.enlace} target="_blank" rel="noreferrer" className="mt-2 inline-block rounded-lg border px-4 py-1 text-xs font-medium" style={{ borderColor: VERDE, color: VERDE }}>Ver mas</a>}
+                  {ev.enlace && <a href={ev.enlace} target="_blank" rel="noreferrer" className="mt-2 inline-block rounded-lg border px-4 py-1 text-xs font-medium" style={{ borderColor: VERDE, color: VERDE }}>Ver más</a>}
                 </div>
               </li>
             ))}

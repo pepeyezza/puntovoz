@@ -25,10 +25,8 @@ export default async function Page() {
     <DataSeccionWrapper seccion="/observatorio/entrevistas">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow text-acento">{header.eyebrow}</p>
-        <div className="mt-3">
-          <ObservatorioNav active="/observatorio/entrevistas" />
-        </div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/entrevistas" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <Mic2 size={32} className="text-acento" />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>
@@ -39,6 +37,7 @@ export default async function Page() {
               <p className="font-display text-xl">{e.entrevistado}</p>
               <p className="mt-1 text-sm text-acento">{e.cargo}</p>
               <p className="mt-3 text-sm text-principal/60">{e.resumen}</p>
+              <p className="mt-3 text-xs text-principal/40">{e.date}</p>
             </Link>
           ))}
         </div>

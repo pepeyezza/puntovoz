@@ -7,7 +7,7 @@ import InvestigacionClient from "@/components/observatorio/InvestigacionClient";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
-export const metadata: Metadata = { title: "Investigacion Cientifica - Data" };
+export const metadata: Metadata = { title: "Investigación Científica - Data" };
 
 async function get() {
   try {
@@ -17,20 +17,20 @@ async function get() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataInvestigacion", { eyebrow: "Data", title: "Investigacion cientifica", description: "Instituciones de investigacion y servicios cientificos en Chascomus." });
+  const header = await getPageHeader("dataInvestigacion", { eyebrow: "Data", title: "Investigación científica", description: "Instituciones de investigación y servicios científicos en Chascomús." });
   const instituciones = await get();
   return (
     <DataSeccionWrapper seccion="/observatorio/investigacion">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow text-principal/60">{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/investigacion" /></div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/investigacion" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <Microscope size={32} className="text-principal/70" />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>
         {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
         {instituciones.length === 0 ? (
-          <p className="mt-12 text-principal/50">Todavia no hay instituciones cargadas.</p>
+          <p className="mt-12 text-principal/50">Todavía no hay instituciones cargadas.</p>
         ) : (
           <InvestigacionClient instituciones={instituciones} />
         )}

@@ -2,7 +2,6 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Hero from "@/components/layout/Hero";
-import BannerCarousel from "@/components/layout/BannerCarousel";
 import ArticleCard from "@/components/editorial/ArticleCard";
 import AudioCard from "@/components/audio/AudioCard";
 import ObservatorioPreview from "@/components/observatorio/ObservatorioPreview";
@@ -44,9 +43,7 @@ async function getHomeData() {
     return {
       editoriales: posts.length
         ? posts.map((p) => ({
-            slug: p.slug,
-            title: p.title,
-            subtitle: p.subtitle ?? "",
+            slug: p.slug, title: p.title, subtitle: p.subtitle ?? "",
             category: p.categories[0]?.name ?? "",
             date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
             coverImage: p.coverImage ?? undefined,
@@ -70,11 +67,29 @@ export default async function HomePage() {
 
   return (
     <>
-      {config.bannerImages.length > 0 && <BannerCarousel images={config.bannerImages} />}
+      {/* Hero oscuro con banner integrado */}
+      <Hero
+        eyebrow={config.eyebrow}
+        title={config.title}
+        description={config.description}
+        bannerImages={config.bannerImages}
+      />
 
-      <Hero eyebrow={config.eyebrow} title={config.title} description={config.description} />
+      {/* Barra amarilla de categorías */}
+      <div className="bg-joven">
+        <div className="mx-auto flex max-w-editorial items-center gap-6 overflow-x-auto px-5 py-2.5 lg:px-8">
+          <span className="shrink-0 text-xs font-bold uppercase tracking-widest text-principal/60">Temas</span>
+          {CATEGORIAS_VOZ.map((cat) => (
+            <Link key={cat} href={`/editoriales?categoria=${encodeURIComponent(cat)}`}
+              className="shrink-0 text-sm font-medium text-principal/65 transition-colors hover:text-principal">
+              {cat}
+            </Link>
+          ))}
+        </div>
+      </div>
 
-      <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
+      {/* Últimas publicaciones */}
+      <section className="mx-auto max-w-editorial px-5 py-14 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
             <p className="eyebrow text-acento">Recién publicado</p>
@@ -93,20 +108,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-principal/10 bg-principal/[0.03] py-12">
-        <div className="mx-auto max-w-editorial px-5 lg:px-8">
-          <p className="eyebrow text-acento">Explorá por tema</p>
-          <div className="mt-5 flex flex-wrap gap-3">
-            {CATEGORIAS_VOZ.map((cat) => (
-              <Link key={cat} href={`/editoriales?categoria=${encodeURIComponent(cat)}`} className="rounded-lg border border-principal/15 px-5 py-2 text-sm font-medium transition-colors hover:border-acento hover:text-acento">
-                {cat}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
+      {/* Audios */}
+      <section className="mx-auto max-w-editorial px-5 py-14 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
             <p className="eyebrow text-acento">Para escuchar</p>
@@ -119,8 +122,10 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Data preview */}
       <ObservatorioPreview indicadores={indicadores} titulo={config.dataTitle} linkLabel={config.dataSubtitle} />
 
+      {/* Quiénes somos */}
       <section className="mx-auto max-w-editorial px-5 py-20 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
           <div>

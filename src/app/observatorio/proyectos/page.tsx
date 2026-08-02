@@ -25,16 +25,17 @@ async function getProyectos() {
 const TIPOS = ["Todos", "Público", "Privado", "Mixto"];
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
-  const header = await getPageHeader("dataProyectos", { eyebrow: "Data", title: "Proyectos de desarrollo local", description: "Iniciativas publicas, privadas y mixtas del partido." });
+  const header = await getPageHeader("dataProyectos", { eyebrow: "Data", title: "Proyectos de desarrollo local", description: "Iniciativas públicas, privadas y mixtas del partido." });
   const tipoActivo = searchParams.tipo ?? "Todos";
   const todos = await getProyectos();
   const proyectos = tipoActivo === "Todos" ? todos : todos.filter((p) => p.tipo === tipoActivo);
+
   return (
     <DataSeccionWrapper seccion="/observatorio/proyectos">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow text-acento">{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/proyectos" /></div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/proyectos" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <FolderKanban size={32} className="text-acento" />
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>
@@ -48,7 +49,7 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
           ))}
         </div>
         {proyectos.length === 0 ? (
-          <p className="mt-10 text-principal/50">Todavia no hay proyectos cargados.</p>
+          <p className="mt-10 text-principal/50">Todavía no hay proyectos cargados.</p>
         ) : (
           <ul className="mt-8 space-y-4">
             {proyectos.map((p) => (
@@ -65,7 +66,7 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
                         <p className="font-display text-xl">{p.nombre}</p>
                         {p.area && <p className="mt-1 text-sm text-principal/50">{p.area}</p>}
                         {p.descripcion && <p className="mt-3 text-sm text-principal/70">{p.descripcion}</p>}
-                        {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver mas</a>}
+                        {p.enlace && <a href={p.enlace} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-medium text-acento hover:underline">Ver más</a>}
                       </div>
                       <span className="shrink-0 rounded-lg bg-acento/20 px-3 py-1 text-xs font-semibold text-acento">{p.tipo}</span>
                     </div>

@@ -20,14 +20,14 @@ async function getIndicadores() {
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataIndicadores", { eyebrow: "Data", title: "Indicadores", description: "Principales metricas de desarrollo del partido de Chascomus." });
+  const header = await getPageHeader("dataIndicadores", { eyebrow: "Data", title: "Indicadores", description: "Principales métricas de desarrollo del partido de Chascomús." });
   const indicadores = await getIndicadores();
   return (
     <DataSeccionWrapper seccion="/observatorio/indicadores">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
         <p className="eyebrow text-joven">{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/indicadores" /></div>
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-4"><ObservatorioNav active="/observatorio/indicadores" /></div>
+        <div className="mt-8 flex items-center gap-3">
           <BarChart2 size={32} className="text-joven" />
           <h1 className="font-display text-4xl text-secundario">{header.title}</h1>
         </div>

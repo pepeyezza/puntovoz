@@ -16,7 +16,7 @@ module.exports = {
         logo: ["var(--font-poppins)", "sans-serif"],
       },
       maxWidth: {
-        editorial: "72rem",
+        editorial: "80rem",
       },
     },
   },

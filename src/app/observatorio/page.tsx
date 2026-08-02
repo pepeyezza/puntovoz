@@ -95,15 +95,12 @@ export default async function ObservatorioPage() {
 
   return (
     <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-      <header className="max-w-2xl">
-        <p className="eyebrow text-acento">{header.eyebrow}</p>
-        <h1 className="mt-2 font-display text-4xl">{header.title}</h1>
-        <p className="mt-4 text-principal/70">{header.description}</p>
-      </header>
-
-      <div className="mt-6">
+<p className="eyebrow text-acento">{header.eyebrow}</p>
+      <div className="mt-3">
         <ObservatorioNav active="/observatorio" />
       </div>
+      <h1 className="mt-6 font-display text-4xl">{header.title}</h1>
+      <p className="mt-2 text-principal/70">{header.description}</p>
 
       {/* INDICADORES */}
       <div className="mt-10 rounded-3xl bg-principal p-8 text-secundario">

@@ -99,19 +99,22 @@ export default async function ObservatorioPage() {
           </div>
         </div>
 
-        {/* PROYECTOS */}
+        {/* INICIATIVAS */}
         <div className="flex flex-col rounded-3xl bg-acento/10 p-7">
           <div className="flex items-center gap-2.5">
             <FolderKanban size={20} className="text-acento" />
-            <h2 className="font-display text-xl">Proyectos</h2>
+            <h2 className="font-display text-xl">Iniciativas</h2>
             <Link href="/observatorio/proyectos" className="ml-auto rounded-lg border border-acento/40 px-3 py-1 text-xs font-semibold text-acento hover:opacity-80">
               Ver todo →
             </Link>
           </div>
           <ul className="mt-5 flex-1 space-y-2.5">
             {proyectos.map((p) => (
-              <li key={p.nombre} className="flex items-center justify-between rounded-xl bg-secundario/60 px-4 py-2.5">
-                <div>
+              <li key={p.nombre} className="flex items-center gap-3 rounded-xl bg-secundario/60 px-4 py-2.5">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-acento/15 font-display text-xs font-bold text-acento">
+                  {p.nombre.charAt(0)}
+                </span>
+                <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium line-clamp-1">{p.nombre}</p>
                   {p.area && <p className="text-xs text-principal/40">{p.area}</p>}
                 </div>
@@ -132,9 +135,12 @@ export default async function ObservatorioPage() {
           </div>
           <ul className="mt-5 flex-1 space-y-2.5">
             {agenda.map((ev) => (
-              <li key={ev.titulo} className="rounded-xl bg-white/70 px-4 py-2.5">
-                <p className="text-sm font-medium line-clamp-1">{ev.titulo}</p>
-                <p className="text-xs text-principal/50">{ev.fecha}{ev.lugar ? ` · ${ev.lugar}` : ""}</p>
+              <li key={ev.titulo} className="flex items-center gap-3 rounded-xl bg-white/70 px-4 py-2.5">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm" style={{ background: "#d8f3dc", color: "#2d6a4f" }}>📅</span>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium line-clamp-1">{ev.titulo}</p>
+                  <p className="text-xs text-principal/50">{ev.fecha}{ev.lugar ? ` · ${ev.lugar}` : ""}</p>
+                </div>
               </li>
             ))}
           </ul>
@@ -155,8 +161,11 @@ export default async function ObservatorioPage() {
             <ul className="mt-5 flex-1 space-y-2.5">
               {instituciones.map((inst) => (
                 <li key={inst.id}>
-                  <Link href={`/observatorio/oferta-academica/${inst.slug}`} className="flex items-center justify-between rounded-xl bg-secundario/60 px-4 py-2.5 hover:bg-secundario transition-colors">
-                    <p className="text-sm font-medium line-clamp-1">{inst.nombre}</p>
+                  <Link href={`/observatorio/oferta-academica/${inst.slug}`} className="flex items-center gap-3 rounded-xl bg-secundario/60 px-4 py-2.5 hover:bg-secundario transition-colors">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-joven/30 font-display text-xs font-bold text-principal/50">
+                      {inst.nombre.charAt(0)}
+                    </span>
+                    <p className="flex-1 text-sm font-medium line-clamp-1">{inst.nombre}</p>
                     <span className="ml-2 shrink-0 text-xs text-principal/40">{inst._count.carreras} carr.</span>
                   </Link>
                 </li>
@@ -180,8 +189,11 @@ export default async function ObservatorioPage() {
             <ul className="mt-5 flex-1 space-y-2.5">
               {cientificas.map((inst) => (
                 <li key={inst.id}>
-                  <Link href={`/observatorio/investigacion/${inst.slug}`} className="flex items-center justify-between rounded-xl bg-secundario/80 px-4 py-2.5 hover:bg-secundario transition-colors">
-                    <p className="text-sm font-medium line-clamp-1">{inst.nombre}</p>
+                  <Link href={`/observatorio/investigacion/${inst.slug}`} className="flex items-center gap-3 rounded-xl bg-secundario/80 px-4 py-2.5 hover:bg-secundario transition-colors">
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-principal/10 font-display text-xs font-bold text-principal/40">
+                      {inst.nombre.charAt(0)}
+                    </span>
+                    <p className="flex-1 text-sm font-medium line-clamp-1">{inst.nombre}</p>
                     <span className="ml-2 shrink-0 text-xs text-principal/40">{inst._count.servicios} serv.</span>
                   </Link>
                 </li>

@@ -22,7 +22,7 @@ async function getProyectos() {
   } catch { return []; }
 }
 
-const TIPOS = ["Todos", "Público", "Privado", "Mixto"];
+const TIPOS = ["Todas", "Publica", "Privada", "Mixta", "Comunitaria", "Internacional"];
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
   const header = await getPageHeader("dataProyectos", { eyebrow: "Data", title: "Proyectos de desarrollo local", description: "Iniciativas públicas, privadas y mixtas del partido." });
@@ -37,7 +37,7 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
         <div className="mt-4"><ObservatorioNav active="/observatorio/proyectos" /></div>
         <div className="mt-8 flex items-center gap-3">
           <FolderKanban size={32} className="text-acento" />
-          <h1 className="font-display text-4xl">{header.title}</h1>
+          <h1 className="font-display text-4xl">Iniciativas</h1>
         </div>
         {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
         <div className="mt-6 flex flex-wrap gap-2">

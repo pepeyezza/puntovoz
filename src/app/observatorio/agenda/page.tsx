@@ -12,7 +12,7 @@ const VERDE = "#2d6a4f";
 
 async function getAgenda() {
   try {
-    const agenda = await prisma.eventoAgenda.findMany({ orderBy: { fecha: "asc" } });
+    const agenda = await prisma.eventoAgenda.findMany({ orderBy: { createdAt: "desc" } });
     return agenda.map((ev) => ({
       titulo: ev.titulo, descripcion: ev.descripcion ?? "",
       fecha: ev.fecha.toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),

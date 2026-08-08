@@ -5,7 +5,7 @@ import { LayoutDashboard, BarChart2, FolderKanban, CalendarDays, GraduationCap, 
 const TABS = [
   { href: "/observatorio", label: "Resumen", icon: LayoutDashboard },
   { href: "/observatorio/indicadores", label: "Indicadores", icon: BarChart2 },
-  { href: "/observatorio/proyectos", label: "Proyectos", icon: FolderKanban },
+  { href: "/observatorio/proyectos", label: "Iniciativas", icon: FolderKanban },
   { href: "/observatorio/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/observatorio/oferta-academica", label: "Oferta académica", icon: GraduationCap },
   { href: "/observatorio/investigacion", label: "Investigación", icon: Microscope },

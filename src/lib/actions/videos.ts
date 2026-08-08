@@ -1,16 +1,10 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 
 function slugify(text: string) {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+  return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
 export async function createVideo(formData: FormData) {
@@ -19,26 +13,19 @@ export async function createVideo(formData: FormData) {
   const youtubeUrl = String(formData.get("youtubeUrl") || "");
   const categoriaNombre = String(formData.get("category") || "");
   const status = String(formData.get("status") || "PUBLISHED") as "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  const orden = parseInt(String(formData.get("orden") || "0")) || 0;
 
   await prisma.video.create({
     data: {
-      title,
-      description,
-      youtubeUrl,
-      slug: slugify(title),
-      status,
+      title, description, youtubeUrl,
+      slug: slugify(title + "-" + Date.now()),
+      status, orden,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
       categories: categoriaNombre
-        ? {
-            connectOrCreate: {
-              where: { slug: slugify(categoriaNombre) },
-              create: { name: categoriaNombre, slug: slugify(categoriaNombre) },
-            },
-          }
+        ? { connectOrCreate: { where: { slug: slugify(categoriaNombre) }, create: { name: categoriaNombre, slug: slugify(categoriaNombre) } } }
         : undefined,
     },
   });
-
   revalidatePath("/admin/videos");
   revalidatePath("/videos");
   redirect("/admin/videos");
@@ -49,18 +36,12 @@ export async function updateVideo(id: string, formData: FormData) {
   const description = String(formData.get("description") || "");
   const youtubeUrl = String(formData.get("youtubeUrl") || "");
   const status = String(formData.get("status") || "PUBLISHED") as "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  const orden = parseInt(String(formData.get("orden") || "0")) || 0;
 
   await prisma.video.update({
     where: { id },
-    data: {
-      title,
-      description,
-      youtubeUrl,
-      status,
-      publishedAt: status === "PUBLISHED" ? new Date() : null,
-    },
+    data: { title, description, youtubeUrl, status, orden, publishedAt: status === "PUBLISHED" ? new Date() : null },
   });
-
   revalidatePath("/admin/videos");
   revalidatePath("/videos");
   redirect("/admin/videos");

@@ -68,12 +68,12 @@ model Audio {
   description String?
   spotifyUrl  String
   coverImage  String?
+  orden       Int        @default(0)
   status      Status     @default(PUBLISHED)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   categories  Category[] @relation("AudioCategories")
 }
-
 model Video {
   id          String     @id @default(cuid())
   title       String
@@ -81,12 +81,12 @@ model Video {
   description String?
   youtubeUrl  String
   coverImage  String?
+  orden       Int        @default(0)
   status      Status     @default(PUBLISHED)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())
   categories  Category[] @relation("VideoCategories")
 }
-
 model Category {
   id     String  @id @default(cuid())
   name   String

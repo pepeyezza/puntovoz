@@ -15,7 +15,7 @@ const NAV: NavItem[] = [
   { href: "/admin/observatorio/proyectos", label: "· Proyectos" },
   { href: "/admin/observatorio/agenda", label: "· Agenda" },
   { href: "/admin/observatorio/oferta-academica", label: "· Oferta academica" },
-  { href: "/admin/observatorio/investigacion", label: "· Investigacion" },
+  { href: "/admin/observatorio/Ciencia y Tecnología", label: "· Ciencia y Tecnología" },
   { href: "/admin/observatorio/herramientas", label: "· Herramientas" },
   { href: "/admin/observatorio/entrevistas", label: "· Entrevistas" },
   { href: "/admin/observatorio/notas", label: "· Notas" },

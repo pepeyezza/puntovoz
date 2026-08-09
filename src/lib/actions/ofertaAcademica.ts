@@ -20,6 +20,7 @@ export async function createInstitucion(formData: FormData) {
       email: String(formData.get("email") || "") || null,
       web: String(formData.get("web") || "") || null,
       logoUrl: String(formData.get("logoUrl") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
     },
   });
   revalidatePath("/admin/observatorio/oferta-academica");
@@ -39,6 +40,7 @@ export async function updateInstitucion(id: string, formData: FormData) {
       email: String(formData.get("email") || "") || null,
       web: String(formData.get("web") || "") || null,
       logoUrl: String(formData.get("logoUrl") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
     },
   });
   revalidatePath("/admin/observatorio/oferta-academica");

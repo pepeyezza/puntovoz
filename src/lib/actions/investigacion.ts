@@ -33,6 +33,7 @@ export async function updateInstitucionCientifica(id: string, formData: FormData
       nombre: String(formData.get("nombre") || ""),
       descripcion: String(formData.get("descripcion") || "") || null,
       logoUrl: String(formData.get("logoUrl") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
       direccion: String(formData.get("direccion") || "") || null,
       telefono: String(formData.get("telefono") || "") || null,
       email: String(formData.get("email") || "") || null,

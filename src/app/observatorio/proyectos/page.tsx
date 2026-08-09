@@ -29,7 +29,7 @@ const TIPOS = ["Todos", "Público", "Privado", "Mixto", "Comunitario", "Internac
 
 async function getIniciativas() {
   try {
-    const p = await prisma.proyectoLocal.findMany({ orderBy: { createdAt: "desc" } });
+    const p = await prisma.proyectoLocal.findMany({ orderBy: [{ orden: "asc" }, { createdAt: "desc" }] });
     return p.map((p) => ({
       id: p.id, nombre: p.nombre, area: p.area ?? "",
       tipo: tipoLabel(p.tipo), descripcion: p.descripcion,

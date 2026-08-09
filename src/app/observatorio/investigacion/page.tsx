@@ -21,8 +21,8 @@ async function get() {
 
 export default async function Page() {
   const header = await getPageHeader("dataInvestigacion", {
-    eyebrow: "Data", title: "Investigacion cientifica",
-    description: "Instituciones de investigacion y servicios cientificos en Chascomus.",
+    eyebrow: "Data", title: "Ciencia y Tecnología",
+    description: "Instituciones de investigación científica y tecnológica en Chascomús.",
   });
   const instituciones = await get();
 

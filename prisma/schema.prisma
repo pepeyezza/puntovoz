@@ -153,6 +153,7 @@ model EventoAgenda {
   categoria   String?
   enlace      String?
   imagen      String?
+orden Int @default(0)
   createdAt   DateTime @default(now())
 }
 

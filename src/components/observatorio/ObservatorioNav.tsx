@@ -8,7 +8,7 @@ const TABS = [
   { href: "/observatorio/proyectos", label: "Iniciativas", icon: FolderKanban },
   { href: "/observatorio/agenda", label: "Agenda", icon: CalendarDays },
   { href: "/observatorio/oferta-academica", label: "Oferta académica", icon: GraduationCap },
-  { href: "/observatorio/investigacion", label: "Investigación", icon: Microscope },
+  { href: "/observatorio/investigacion", label: "Ciencia y Tecnología", icon: Microscope },
   { href: "/observatorio/herramientas", label: "Herramientas", icon: Wrench },
   { href: "/observatorio/entrevistas", label: "Entrevistas", icon: Mic2 },
   { href: "/observatorio/notas", label: "Notas", icon: FileText },

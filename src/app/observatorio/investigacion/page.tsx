@@ -40,42 +40,40 @@ export default async function Page() {
         {instituciones.length === 0 ? (
           <p className="mt-12 text-principal/50">Todavia no hay instituciones cargadas.</p>
         ) : (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2">
             {instituciones.map((inst) => (
               <Link key={inst.id} href={`/observatorio/investigacion/${inst.slug}`}
-                className="group flex flex-col rounded-2xl border border-principal/10 bg-secundario/80 p-6 transition-all hover:border-principal/30 hover:bg-secundario">
-                {/* Logo o inicial */}
-                <div className="flex items-start gap-4">
-                  {inst.logoUrl ? (
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-principal/10 bg-white">
-                      <Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-2" />
-                    </div>
-                  ) : (
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-principal/10 font-display text-2xl font-medium text-principal/35">
-                      {inst.nombre.charAt(0)}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-lg leading-snug">{inst.nombre}</p>
-                    <span className="mt-1 inline-block rounded-lg bg-principal/8 px-2.5 py-0.5 text-xs text-principal/50">
-                      Institución científica
-                    </span>
+                className="group flex flex-col overflow-hidden rounded-2xl border border-principal/8 bg-secundario/80 transition-all hover:border-principal/20 hover:bg-secundario">
+                {/* Imagen principal */}
+                {(inst as any).imagen && (
+                  <div className="relative aspect-video w-full">
+                    <Image src={(inst as any).imagen} alt={inst.nombre} fill className="object-cover" />
                   </div>
-                </div>
-                {/* Descripción */}
-                {inst.descripcion && (
-                  <p className="mt-4 flex-1 text-sm text-principal/60 leading-relaxed line-clamp-3">{inst.descripcion}</p>
                 )}
-                {/* Contacto */}
-                <div className="mt-4 space-y-1">
-                  {(inst as any).web && (
-                    <p className="text-xs text-principal/40 truncate">{(inst as any).web}</p>
-                  )}
-                </div>
-                {/* Footer */}
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-xs text-principal/40">{inst._count.servicios} servicio(s)</span>
-                  <span className="text-xs font-medium text-principal/40 opacity-0 transition-opacity group-hover:opacity-100">Ver servicios →</span>
+                <div className="flex flex-col flex-1 p-6">
+                  {/* Logo + nombre */}
+                  <div className="flex items-start gap-3">
+                    {inst.logoUrl ? (
+                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
+                        <Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-1" />
+                      </div>
+                    ) : (
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-principal/10 font-display text-lg font-medium text-principal/35">
+                        {inst.nombre.charAt(0)}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-display text-xl leading-snug">{inst.nombre}</p>
+                      <span className="mt-1 inline-block rounded-lg bg-principal/8 px-2.5 py-0.5 text-xs text-principal/50">
+                        Institución científica
+                      </span>
+                      {inst.descripcion && <p className="mt-3 text-sm text-principal/60 leading-relaxed line-clamp-3">{inst.descripcion}</p>}
+                    </div>
+                  </div>
+                  <div className="mt-4 flex items-center justify-between">
+                    <span className="text-xs text-principal/40">{inst._count.servicios} servicio(s)</span>
+                    <span className="text-xs font-medium text-acento opacity-0 transition-opacity group-hover:opacity-100">Ver servicios →</span>
+                  </div>
                 </div>
               </Link>
             ))}

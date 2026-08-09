@@ -14,6 +14,7 @@ async function getPosts() {
   } catch { return []; }
 }
 
+
 export default async function AdminEditorialesPage() {
   const posts = await getPosts();
   const items = posts.map((p) => ({

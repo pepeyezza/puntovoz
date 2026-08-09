@@ -17,7 +17,8 @@ async function getPosts() {
 export default async function AdminEditorialesPage() {
   const posts = await getPosts();
   const items = posts.map((p) => ({
-    id: p.id, title: p.title,
+    id: p.id,
+    title: p.title,
     subtitle: p.author?.name ?? "",
     badge: p.status === "PUBLISHED" ? "Publicado" : p.status === "DRAFT" ? "Borrador" : "Archivado",
   }));
@@ -27,12 +28,13 @@ export default async function AdminEditorialesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl">Editoriales</h1>
-          <p className="mt-1 text-principal/60">Arrastra para reordenar y guarda.</p>
+          <p className="mt-1 text-principal/60">Arrastrá para reordenar y guardá.</p>
         </div>
         <Link href="/admin/editoriales/nuevo" className="rounded-lg bg-principal px-5 py-2.5 text-sm font-semibold text-secundario hover:-translate-y-0.5">
           + Nuevo editorial
         </Link>
       </div>
+
       <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_auto]">
         <ReorderableList items={items} tipo="post" />
         <div className="flex flex-col gap-2 lg:w-36">

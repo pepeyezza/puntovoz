@@ -49,6 +49,7 @@ model Post {
   content     String
   type        PostType   @default(EDITORIAL)
   featured    Boolean    @default(false)
+orden       Int        @default(0)
   status      Status     @default(DRAFT)
   publishedAt DateTime?
   createdAt   DateTime   @default(now())

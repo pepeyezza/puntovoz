@@ -20,10 +20,7 @@ async function getEditoriales() {
         // Muestra tanto editoriales propios como publicaciones de colaboradores
         type: { in: ["EDITORIAL", "COLABORADOR"] },
       },
-      orderBy: [
-        { featured: "desc" }, // Los destacados primero
-        { publishedAt: "desc" },
-      ],
+     orderBy: [{ orden: "asc" }, { publishedAt: "desc" }],
       include: { categories: true, author: true },
     });
     if (posts.length === 0) return EDITORIALES_DEMO;

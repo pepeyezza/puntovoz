@@ -39,7 +39,8 @@ export default async function Page({ params }: { params: { id: string } }) {
           <label className="text-sm font-medium">Link</label>
           <input name="enlace" type="url" defaultValue={proyecto.enlace ?? ""} className="mt-2 w-full rounded-xl border border-principal/15 bg-secundario px-4 py-3 text-sm outline-none focus-visible:border-acento" />
         </div>
-        <ImageUploadField name="imagen" defaultValue={(proyecto as any).imagen ?? ""} label="Logo o imagen de la iniciativa" />
+        <ImageUploadField name="logoUrl" defaultValue={(proyecto as any).logoUrl ?? ""} label="Logo / identidad de la organizacion (miniatura)" />
+        <ImageUploadField name="imagen" defaultValue={(proyecto as any).imagen ?? ""} label="Imagen principal del proyecto" />
         <div className="flex gap-3 pt-2">
           <button type="submit" className="rounded-lg bg-principal px-6 py-3 text-sm font-semibold text-secundario">Guardar</button>
           <a href="/admin/observatorio/proyectos" className="rounded-lg border border-principal/15 px-6 py-3 text-sm font-medium hover:border-acento hover:text-acento">Cancelar</a>

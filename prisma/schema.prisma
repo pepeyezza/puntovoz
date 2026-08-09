@@ -140,6 +140,8 @@ model ProyectoLocal {
   imagen      String?
   coverImage  String?
   createdAt   DateTime @default(now())
+logoUrl String?
+
 }
 
 model EventoAgenda {

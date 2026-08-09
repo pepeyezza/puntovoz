@@ -138,6 +138,7 @@ model ProyectoLocal {
   tipo        String   @default("publico")
   area        String?
   enlace      String?
+orden       Int        @default(0)
   imagen      String?
   coverImage  String?
   createdAt   DateTime @default(now())
@@ -278,5 +279,6 @@ model HerramientaTecnologica {
   logoUrl     String?
   enlace      String
   destacada   Boolean  @default(false)
+orden       Int        @default(0)
   createdAt   DateTime @default(now())
 }

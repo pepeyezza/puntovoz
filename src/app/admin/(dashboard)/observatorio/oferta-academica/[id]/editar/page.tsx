@@ -22,6 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
         <div><label className="text-sm font-medium">Sitio web</label><input name="web" type="url" defaultValue={inst.web ?? ""} className="mt-2 w-full rounded-xl border border-principal/15 bg-secundario px-4 py-3 text-sm outline-none focus-visible:border-acento" /></div>
         <ImageUploadField name="logoUrl" defaultValue={inst.logoUrl ?? ""} label="Logo de la institución" />
+        <ImageUploadField name="imagen" defaultValue={(inst as any).imagen ?? ""} label="Imagen principal de la institucion" />
         <div className="flex gap-3 pt-2">
           <button type="submit" className="rounded-full bg-principal px-6 py-3 text-sm font-semibold text-secundario">Guardar</button>
           <a href="/admin/observatorio/oferta-academica" className="rounded-full border border-principal/15 px-6 py-3 text-sm font-medium hover:border-acento hover:text-acento">Cancelar</a>

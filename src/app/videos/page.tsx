@@ -14,7 +14,7 @@ async function getVideos() {
   try {
     const videos = await prisma.video.findMany({
       where: { status: "PUBLISHED" },
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ orden: "asc" }, { publishedAt: "desc" }],
       include: { categories: true },
     });
     if (videos.length === 0) return VIDEOS_DEMO;

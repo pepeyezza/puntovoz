@@ -36,6 +36,7 @@ export async function updateProyecto(id: string, formData: FormData) {
       tipo: String(formData.get("tipo") || "publico"),
       enlace: String(formData.get("enlace") || "") || null,
       imagen: String(formData.get("imagen") || "") || null,
+      logoUrl: String(formData.get("logoUrl") || "") || null,
     },
   });
   revalidatePath("/admin/observatorio/proyectos");

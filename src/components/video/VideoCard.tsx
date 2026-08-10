@@ -1,5 +1,4 @@
 function getYoutubeEmbedUrl(url: string) {
-  // Soporta youtube.com/watch?v=, youtu.be/ y youtube.com/embed/
   let videoId = "";
   try {
     const u = new URL(url);
@@ -10,9 +9,7 @@ function getYoutubeEmbedUrl(url: string) {
     } else {
       videoId = u.searchParams.get("v") ?? "";
     }
-  } catch {
-    videoId = "";
-  }
+  } catch { videoId = ""; }
   return `https://www.youtube.com/embed/${videoId}`;
 }
 
@@ -25,7 +22,7 @@ type VideoCardProps = {
 
 export default function VideoCard({ title, description, youtubeUrl, date }: VideoCardProps) {
   return (
-    <article className="overflow-hidden rounded-2xl border border-principal/10 bg-secundario">
+    <article className="overflow-hidden rounded-2xl bg-principal">
       <div className="aspect-video">
         <iframe
           src={getYoutubeEmbedUrl(youtubeUrl)}
@@ -35,10 +32,10 @@ export default function VideoCard({ title, description, youtubeUrl, date }: Vide
           className="h-full w-full"
         />
       </div>
-      <div className="p-4">
-        <h3 className="font-display text-lg leading-snug">{title}</h3>
-        {description && <p className="mt-1 text-sm text-principal/60 line-clamp-2">{description}</p>}
-        {date && <p className="mt-2 text-xs text-principal/40">{date}</p>}
+      <div className="p-5">
+        <h3 className="font-display text-lg leading-snug text-secundario">{title}</h3>
+        {description && <p className="mt-1 text-sm text-secundario/55 line-clamp-2">{description}</p>}
+        {date && <p className="mt-2 text-xs text-secundario/35">{date}</p>}
       </div>
     </article>
   );

@@ -67,8 +67,8 @@ export default async function ObservatorioPage() {
       {/* BENTO — columna izquierda grande + derecha */}
       <div className="mt-10 grid gap-5 lg:grid-cols-[1.35fr_1fr]">
 
-        {/* INDICADORES — card grande oscura */}
-        <div className="flex flex-col rounded-3xl bg-principal p-8 text-secundario lg:row-span-2">
+        {/* INDICADORES — card grande azul medio */}
+        <div className="flex flex-col rounded-3xl p-8 text-secundario lg:row-span-2" style={{ backgroundColor: "#2d4a60" }}>
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-joven/20">
               <BarChart2 size={18} className="text-joven" />

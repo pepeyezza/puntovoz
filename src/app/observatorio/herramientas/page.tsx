@@ -12,14 +12,20 @@ export const metadata: Metadata = { title: "Tablero de herramientas - Data" };
 
 async function get() {
   try {
-    const h = await (prisma as any).herramientaTecnologica.findMany({ orderBy: [{ categoria: "asc" }, { nombre: "asc" }] });
+    const h = await (prisma as any).herramientaTecnologica.findMany({
+      orderBy: [{ orden: "asc" }, { categoria: "asc" }, { nombre: "asc" }],
+    });
     return h.length ? h : HERRAMIENTAS_DEMO;
   } catch { return HERRAMIENTAS_DEMO; }
 }
 
 export default async function Page() {
-  const header = await getPageHeader("dataHerramientas", { eyebrow: "Data", title: "Tablero de herramientas", description: "Apps, plataformas e inteligencia artificial para la gestión, comunicación y productividad." });
+  const header = await getPageHeader("dataHerramientas", {
+    eyebrow: "Data", title: "Tablero de herramientas",
+    description: "Apps, plataformas e inteligencia artificial para la gestión, comunicación y productividad.",
+  });
   const herramientas = await get();
+
   return (
     <DataSeccionWrapper seccion="/observatorio/herramientas">
       <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
@@ -30,7 +36,7 @@ export default async function Page() {
           <h1 className="font-display text-4xl">{header.title}</h1>
         </div>
         {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
-        <HerramientasClient herramientas={herramientas} />
+        <HerramientasClient herramientas={herramientas} paginado={true} />
       </section>
     </DataSeccionWrapper>
   );

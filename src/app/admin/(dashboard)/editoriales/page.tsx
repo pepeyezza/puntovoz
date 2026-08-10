@@ -7,13 +7,12 @@ import ReorderableList from "@/components/admin/ReorderableList";
 async function getPosts() {
   try {
     return await prisma.post.findMany({
-      where: { type: { in: ["EDITORIAL", "COLABORADOR"] } },
+      where: { type: "EDITORIAL" },
       orderBy: [{ orden: "asc" }, { createdAt: "desc" }],
       include: { author: true, categories: true },
     });
   } catch { return []; }
 }
-
 
 export default async function AdminEditorialesPage() {
   const posts = await getPosts();

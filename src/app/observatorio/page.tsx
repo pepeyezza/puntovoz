@@ -153,30 +153,35 @@ export default async function ObservatorioPage() {
           </div>
 
           {/* Herramientas */}
-          <div className="flex flex-col rounded-3xl p-5" style={{ backgroundColor: "#6d28d9", color: "white" }}>
+          <div className="flex flex-col rounded-3xl border-2 p-5" style={{ borderColor: "#6d28d9" }}>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
-                <Wrench size={14} className="text-white" />
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#ede9fe" }}>
+                <Wrench size={14} style={{ color: "#6d28d9" }} />
               </div>
               <h2 className="font-display text-base">Herramientas</h2>
-              <Link href="/observatorio/herramientas" className="ml-auto text-xs font-semibold text-white/70 hover:text-white">Ver →</Link>
+              <Link href="/observatorio/herramientas" className="ml-auto text-xs font-semibold hover:opacity-80" style={{ color: "#6d28d9" }}>Ver →</Link>
             </div>
-            <div className="mt-3 flex-1 grid grid-cols-2 gap-1.5">
-              {herramientas.slice(0, 6).map((h: any) => (
-                <a key={h.id} href={h.enlace} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-1.5 rounded-lg bg-white/10 px-2 py-1.5 hover:bg-white/20 transition-colors">
-                  {h.logoUrl ? (
-                    <div className="relative h-5 w-5 shrink-0 overflow-hidden rounded bg-white">
-                      <Image src={h.logoUrl} alt={h.nombre} fill className="object-contain p-0.5" />
-                    </div>
-                  ) : (
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded bg-white/20 text-xs font-bold text-white">
-                      {h.nombre.charAt(0)}
-                    </span>
-                  )}
-                  <span className="text-xs font-medium text-white line-clamp-1">{h.nombre}</span>
-                </a>
-              ))}
+            <div className="mt-3 flex-1 grid grid-cols-2 gap-2">
+              {herramientas.slice(0, 6).map((h: any) => {
+                const bgColor = h.categoria === "IA" ? "#ede9fe" : h.categoria === "Productividad y Ofimatica" ? "#fff7e6" : h.categoria === "Gestion y Organizacion" ? "#e8f5e9" : "#f1f5f9";
+                const textColor = h.categoria === "IA" ? "#6d28d9" : h.categoria === "Productividad y Ofimatica" ? "#b45309" : h.categoria === "Gestion y Organizacion" ? "#2d6a4f" : "#475569";
+                return (
+                  <a key={h.id} href={h.enlace} target="_blank" rel="noreferrer"
+                    className="flex items-center gap-2 rounded-xl border border-principal/8 bg-secundario/60 px-3 py-2 hover:bg-secundario transition-colors">
+                    {h.logoUrl ? (
+                      <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
+                        <Image src={h.logoUrl} alt={h.nombre} fill className="object-contain p-0.5" />
+                      </div>
+                    ) : (
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold"
+                        style={{ background: bgColor, color: textColor }}>
+                        {h.nombre.charAt(0)}
+                      </span>
+                    )}
+                    <span className="text-xs font-medium text-principal line-clamp-1">{h.nombre}</span>
+                  </a>
+                );
+              })}
             </div>
           </div>
 

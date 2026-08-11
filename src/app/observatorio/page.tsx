@@ -93,29 +93,29 @@ export default async function ObservatorioPage() {
         </div>
 
         {/* INICIATIVAS */}
-        <div className="flex flex-col rounded-3xl bg-acento p-6 text-secundario">
+        <div className="flex flex-col rounded-3xl bg-joven p-6 text-principal">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secundario/15">
               <FolderKanban size={16} className="text-secundario" />
             </div>
             <h2 className="font-display text-lg">Iniciativas</h2>
-            <Link href="/observatorio/proyectos" className="ml-auto rounded-lg border border-secundario/30 px-3 py-1 text-xs font-semibold text-secundario hover:bg-secundario/10">
+            <Link href="/observatorio/proyectos" className="ml-auto rounded-lg border border-principal/30 px-3 py-1 text-xs font-semibold text-principal hover:bg-principal/10">
               Ver todo →
             </Link>
           </div>
           <ul className="mt-4 flex-1 space-y-2">
             {proyectos.map((p: any) => (
-              <li key={p.nombre} className="flex items-center gap-2.5 rounded-xl bg-secundario/10 px-4 py-2.5">
+              <li key={p.nombre} className="flex items-center gap-2.5 rounded-xl bg-principal/10 px-4 py-2.5">
                 {p.logoUrl ? (
                   <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-lg bg-white">
                     <Image src={p.logoUrl} alt={p.nombre} fill className="object-contain p-0.5" />
                   </div>
                 ) : (
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-secundario/20 text-xs font-bold text-secundario">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-principal/20 text-xs font-bold text-principal">
                     {p.nombre.charAt(0)}
                   </span>
                 )}
-                <p className="text-sm font-medium text-secundario line-clamp-1">{p.nombre}</p>
+                <p className="text-sm font-medium text-principal line-clamp-1">{p.nombre}</p>
               </li>
             ))}
           </ul>
@@ -125,13 +125,13 @@ export default async function ObservatorioPage() {
         <div className="grid grid-cols-2 gap-5">
 
           {/* Agenda */}
-          <div className="flex flex-col rounded-3xl p-5" style={{ backgroundColor: "#2d6a4f", color: "white" }}>
+          <div className="flex flex-col rounded-3xl p-5" style={{ backgroundColor: "#c87a62", color: "white" }}>
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/15">
                 <CalendarDays size={14} className="text-white" />
               </div>
               <h2 className="font-display text-base">Agenda</h2>
-              <Link href="/observatorio/agenda" className="ml-auto text-xs font-semibold text-white/70 hover:text-white">Ver →</Link>
+              <Link href="/observatorio/agenda" className="ml-auto text-xs font-semibold text-acento hover:opacity-80">Ver →</Link>
             </div>
             <ul className="mt-3 flex-1 space-y-2">
               {agenda.map((ev: any) => (
@@ -153,13 +153,13 @@ export default async function ObservatorioPage() {
           </div>
 
           {/* Herramientas */}
-          <div className="flex flex-col rounded-3xl border-2 p-5" style={{ borderColor: "#6d28d9" }}>
+          <div className="flex flex-col rounded-3xl bg-joven/15 p-5">
             <div className="flex items-center gap-2">
               <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ background: "#ede9fe" }}>
                 <Wrench size={14} style={{ color: "#6d28d9" }} />
               </div>
               <h2 className="font-display text-base">Herramientas</h2>
-              <Link href="/observatorio/herramientas" className="ml-auto text-xs font-semibold hover:opacity-80" style={{ color: "#6d28d9" }}>Ver →</Link>
+              <Link href="/observatorio/herramientas" className="ml-auto text-xs font-semibold text-principal/60 hover:text-principal">Ver →</Link>
             </div>
             <div className="mt-3 flex-1 grid grid-cols-2 gap-2">
               {herramientas.slice(0, 6).map((h: any) => {
@@ -192,33 +192,33 @@ export default async function ObservatorioPage() {
       <div className="mt-5 grid gap-5 sm:grid-cols-3">
 
         {/* Oferta académica */}
-        <div className="flex flex-col rounded-3xl p-6" style={{ backgroundColor: "#b45309", color: "white" }}>
+        <div className="flex flex-col rounded-3xl bg-acento/15 p-6">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15">
-              <GraduationCap size={16} className="text-white" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-acento/20">
+              <GraduationCap size={16} className="text-acento" />
             </div>
             <h2 className="font-display text-lg">Oferta académica</h2>
-            <Link href="/observatorio/oferta-academica" className="ml-auto text-xs font-semibold text-white/70 hover:text-white">Ver →</Link>
+            <Link href="/observatorio/oferta-academica" className="ml-auto text-xs font-semibold text-acento hover:opacity-80">Ver →</Link>
           </div>
           {instituciones.length === 0 ? (
-            <p className="mt-4 text-xs text-white/50">Sin instituciones cargadas.</p>
+            <p className="mt-4 text-xs text-acento/60">Sin instituciones cargadas.</p>
           ) : (
             <ul className="mt-4 flex-1 space-y-2">
               {instituciones.map((inst) => (
                 <li key={inst.id}>
-                  <Link href={`/observatorio/oferta-academica/${inst.slug}`} className="flex items-center gap-2.5 rounded-xl bg-white/10 px-3 py-2.5 hover:bg-white/20 transition-colors">
+                  <Link href={`/observatorio/oferta-academica/${inst.slug}`} className="flex items-center gap-2.5 rounded-xl bg-secundario/60 px-3 py-2.5 hover:bg-secundario transition-colors">
                     {inst.logoUrl ? (
                       <div className="relative h-8 w-8 shrink-0 overflow-hidden rounded-lg bg-white">
                         <Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-1" />
                       </div>
                     ) : (
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/20 text-sm font-bold text-white">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-acento/20 text-sm font-bold text-acento">
                         {inst.nombre.charAt(0)}
                       </span>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-medium text-white line-clamp-1">{inst.nombre}</p>
-                      <p className="text-xs text-white/50">{inst._count.carreras} carrera(s)</p>
+                      <p className="text-sm font-medium text-principal line-clamp-1">{inst.nombre}</p>
+                      <p className="text-xs text-principal/50">{inst._count.carreras} carrera(s)</p>
                     </div>
                   </Link>
                 </li>

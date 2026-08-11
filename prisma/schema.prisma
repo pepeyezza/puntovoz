@@ -196,6 +196,7 @@ model CarreraOferta {
   descripcion    String?
   inscripcion    String?
   planEstudioUrl String?
+imagen      String?
   institucionId  String
   institucion    InstitucionAcademica @relation(fields: [institucionId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
@@ -222,6 +223,7 @@ model ServicioCientifico {
   descripcion   String?
   area          String?
   contacto      String?
+imagen      String?
   institucionId String
   institucion   InstitucionCientifica @relation(fields: [institucionId], references: [id], onDelete: Cascade)
   createdAt     DateTime @default(now())

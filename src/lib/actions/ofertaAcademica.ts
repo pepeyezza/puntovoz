@@ -1,5 +1,4 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -66,6 +65,7 @@ export async function createCarrera(formData: FormData) {
       descripcion: String(formData.get("descripcion") || "") || null,
       inscripcion: String(formData.get("inscripcion") || "") || null,
       planEstudioUrl: String(formData.get("planEstudioUrl") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
       institucionId,
     },
   });
@@ -86,6 +86,7 @@ export async function updateCarrera(id: string, formData: FormData) {
       descripcion: String(formData.get("descripcion") || "") || null,
       inscripcion: String(formData.get("inscripcion") || "") || null,
       planEstudioUrl: String(formData.get("planEstudioUrl") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
     },
   });
   revalidatePath("/admin/observatorio/oferta-academica");

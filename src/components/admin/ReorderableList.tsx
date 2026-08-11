@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { GripVertical } from "lucide-react";
 
 type Item = { id: string; title: string; subtitle?: string; badge?: string };
-type Props = { items: Item[]; tipo: "audio" | "video" | "agenda"; onReorder?: (ids: string[]) => void };
+type Props = { items: Item[]; tipo: "audio" | "video" | "agenda" | "post" | "proyecto" | "herramienta"; onReorder?: (ids: string[]) => void };
 
 export default function ReorderableList({ items: initialItems, tipo }: Props) {
   const [items, setItems] = useState(initialItems);

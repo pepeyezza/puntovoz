@@ -1,5 +1,4 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
@@ -59,6 +58,7 @@ export async function createServicio(formData: FormData) {
       descripcion: String(formData.get("descripcion") || "") || null,
       area: String(formData.get("area") || "") || null,
       contacto: String(formData.get("contacto") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
       institucionId,
     },
   });
@@ -75,6 +75,7 @@ export async function updateServicio(id: string, formData: FormData) {
       descripcion: String(formData.get("descripcion") || "") || null,
       area: String(formData.get("area") || "") || null,
       contacto: String(formData.get("contacto") || "") || null,
+      imagen: String(formData.get("imagen") || "") || null,
     },
   });
   revalidatePath("/admin/observatorio/investigacion");

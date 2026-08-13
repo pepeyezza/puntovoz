@@ -29,7 +29,7 @@ const TIPOS = ["Todos", "Público", "Privado", "Mixto", "Comunitario", "Internac
 
 async function getIniciativas() {
   try {
-    const p = await prisma.proyectoLocal.findMany({ orderBy: { createdAt: "desc" } });
+    const p = await prisma.proyectoLocal.findMany({ orderBy: [{ orden: "asc" }, { createdAt: "desc" }] });
     return p.map((p) => ({
       id: p.id, nombre: p.nombre, area: p.area ?? "",
       tipo: tipoLabel(p.tipo), descripcion: p.descripcion,
@@ -78,14 +78,12 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
           <div className="mt-8 grid gap-5 sm:grid-cols-2">
             {iniciativas.map((p) => (
               <div key={p.id} className="flex flex-col rounded-2xl bg-secundario/60 overflow-hidden border border-principal/8">
-                {/* Imagen principal */}
                 {p.imagen && (
                   <div className="relative aspect-video w-full">
                     <Image src={p.imagen} alt={p.nombre} fill className="object-cover" />
                   </div>
                 )}
                 <div className="flex flex-col flex-1 p-6">
-                  {/* Header con logo + nombre + tipo */}
                   <div className="flex items-start gap-3">
                     {p.logoUrl && (
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
@@ -102,16 +100,13 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
                       {p.area && <p className="mt-0.5 text-sm text-principal/50">{p.area}</p>}
                     </div>
                   </div>
-                  {/* Descripción */}
                   {p.descripcion && (
-                    <p className="mt-3 flex-1 text-sm text-principal/65 leading-relaxed">{p.descripcion}</p>
+                    <div className="mt-3 flex-1 prose-voz text-sm text-principal/65 leading-relaxed" dangerouslySetInnerHTML={{ __html: p.descripcion }} />
                   )}
-                  {/* Link */}
                   {p.enlace && (
-                    <a href={p.enlace} target="_blank" rel="noreferrer"
-                      className="mt-4 inline-block text-sm font-medium text-acento hover:underline">
-                      Ver más →
-                    </a>
+                    <div className="mt-4">
+                      <a href={p.enlace} target="_blank" rel="noreferrer" className="text-xs text-principal/40 hover:text-acento break-all">{p.enlace}</a>
+                    </div>
                   )}
                 </div>
               </div>

@@ -50,7 +50,7 @@ export default async function Page() {
                 <div>
                   <p className="text-sm font-semibold" style={{ color: VERDE }}>{ev.fecha}</p>
                   <p className="mt-1 font-display text-xl">{ev.titulo}</p>
-                  {ev.descripcion && <p className="mt-1 text-sm text-principal/70">{ev.descripcion}</p>}
+                  {ev.descripcion && <div className="mt-1 prose-voz text-sm text-principal/70" dangerouslySetInnerHTML={{ __html: ev.descripcion }} />}
                   <p className="mt-1 text-sm text-principal/50">{ev.lugar}{ev.categoria ? ` - ${ev.categoria}` : ""}</p>
                   {ev.enlace && <a href={ev.enlace} target="_blank" rel="noreferrer" className="mt-2 inline-block rounded-lg border px-4 py-1 text-xs font-medium" style={{ borderColor: VERDE, color: VERDE }}>Ver más</a>}
                 </div>

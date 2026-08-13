@@ -63,7 +63,7 @@ export default function Hero({
 
           <div className="mt-8 flex flex-wrap gap-2.5">
             <Link href="/editoriales" className="rounded-full bg-acento px-6 py-3 text-sm font-semibold text-secundario transition-opacity hover:opacity-90">
-              Últimas notas
+              Últimos editoriales
             </Link>
             <Link href="/observatorio" className="rounded-full bg-joven px-6 py-3 text-sm font-semibold text-principal transition-opacity hover:opacity-90">
               Data

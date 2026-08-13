@@ -8,7 +8,7 @@ import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
-export const metadata: Metadata = { title: "Investigacion Cientifica - Data" };
+export const metadata: Metadata = { title: "Ciencia y Tecnologia - Data" };
 
 async function get() {
   try {
@@ -21,8 +21,8 @@ async function get() {
 
 export default async function Page() {
   const header = await getPageHeader("dataInvestigacion", {
-    eyebrow: "Data", title: "Investigacion cientifica",
-    description: "Instituciones de investigacion y servicios cientificos en Chascomus.",
+    eyebrow: "Data", title: "Ciencia y Tecnología",
+    description: "Instituciones de investigación científica y tecnológica en Chascomús.",
   });
   const instituciones = await get();
 
@@ -44,14 +44,12 @@ export default async function Page() {
             {instituciones.map((inst) => (
               <Link key={inst.id} href={`/observatorio/investigacion/${inst.slug}`}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-principal/8 bg-secundario/80 transition-all hover:border-principal/20 hover:bg-secundario">
-                {/* Imagen principal */}
                 {(inst as any).imagen && (
                   <div className="relative aspect-video w-full">
                     <Image src={(inst as any).imagen} alt={inst.nombre} fill className="object-cover" />
                   </div>
                 )}
                 <div className="flex flex-col flex-1 p-6">
-                  {/* Logo + nombre */}
                   <div className="flex items-start gap-3">
                     {inst.logoUrl ? (
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
@@ -67,13 +65,18 @@ export default async function Page() {
                       <span className="mt-1 inline-block rounded-lg bg-principal/8 px-2.5 py-0.5 text-xs text-principal/50">
                         Institución científica
                       </span>
-                      {inst.descripcion && <p className="mt-3 text-sm text-principal/60 leading-relaxed line-clamp-3">{inst.descripcion}</p>}
+                      {inst.descripcion && (
+                        <div className="mt-3 prose-voz text-sm text-principal/60 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: inst.descripcion }} />
+                      )}
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="text-xs text-principal/40">{inst._count.servicios} servicio(s)</span>
                     <span className="text-xs font-medium text-acento opacity-0 transition-opacity group-hover:opacity-100">Ver servicios →</span>
                   </div>
+                  {(inst as any).web && (
+                    <p className="mt-2 text-xs text-principal/40 break-all">{(inst as any).web}</p>
+                  )}
                 </div>
               </Link>
             ))}

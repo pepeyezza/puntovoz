@@ -8,12 +8,19 @@ import { prisma } from "@/lib/prisma";
 
 type Props = { params: { slug: string } };
 
-async function getInst(slug: string) { try { return await prisma.institucionCientifica.findUnique({ where:{slug}, include:{servicios:{orderBy:{nombre:"asc"}}} }); } catch { return null; } }
+async function getInst(slug: string) {
+  try {
+    return await prisma.institucionCientifica.findUnique({
+      where: { slug },
+      include: { servicios: { orderBy: { nombre: "asc" } } },
+    });
+  } catch { return null; }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const inst = await getInst(params.slug);
   if (!inst) return {};
-  return { title: `${inst.nombre} · Investigación`, description: inst.descripcion ?? undefined };
+  return { title: `${inst.nombre} · Ciencia y Tecnología`, description: inst.descripcion ?? undefined };
 }
 
 export default async function Page({ params }: Props) {
@@ -22,24 +29,34 @@ export default async function Page({ params }: Props) {
 
   return (
     <section className="mx-auto max-w-editorial px-5 py-16 lg:px-8">
-      <Link href="/observatorio/investigacion" className="text-sm font-medium text-principal/60 hover:text-acento">← Investigación científica</Link>
+      <Link href="/observatorio/investigacion" className="text-sm font-medium text-principal/60 hover:text-acento">← Ciencia y Tecnología</Link>
       <div className="mt-8"><ObservatorioNav active="/observatorio/investigacion" /></div>
 
       <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-start">
         {inst.logoUrl && (
-          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-principal/10"><Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-2" /></div>
+          <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-principal/10">
+            <Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-2" />
+          </div>
         )}
-        <div>
+        <div className="flex-1">
           <h1 className="font-display text-4xl">{inst.nombre}</h1>
-          {inst.descripcion && <p className="mt-3 max-w-2xl text-principal/70">{inst.descripcion}</p>}
+          {inst.descripcion && (
+            <div className="mt-3 max-w-2xl prose-voz text-principal/70" dangerouslySetInnerHTML={{ __html: inst.descripcion }} />
+          )}
           <div className="mt-4 flex flex-wrap gap-4 text-sm text-principal/60">
             {inst.direccion && <span>📍 {inst.direccion}</span>}
             {inst.telefono && <span>📞 {inst.telefono}</span>}
             {inst.email && <a href={`mailto:${inst.email}`} className="hover:text-acento">✉️ {inst.email}</a>}
-            {inst.web && <a href={inst.web} target="_blank" rel="noreferrer" className="hover:text-acento">🌐 Sitio web</a>}
+            {inst.web && <a href={inst.web} target="_blank" rel="noreferrer" className="text-acento hover:underline break-all">{inst.web}</a>}
           </div>
         </div>
       </div>
+
+      {(inst as any).imagen && (
+        <div className="mt-8 relative aspect-video w-full overflow-hidden rounded-2xl border border-principal/10">
+          <Image src={(inst as any).imagen} alt={inst.nombre} fill className="object-cover" />
+        </div>
+      )}
 
       <div className="mt-12">
         <h2 className="font-display text-2xl">Servicios de investigación</h2>
@@ -48,13 +65,20 @@ export default async function Page({ params }: Props) {
         ) : (
           <div className="mt-6 grid gap-5 sm:grid-cols-2">
             {inst.servicios.map((s) => (
-              <div key={s.id} className="rounded-2xl border border-principal/10 p-6">
-                <p className="font-display text-xl">{s.nombre}</p>
-                {s.area && <p className="mt-1 text-sm text-acento">{s.area}</p>}
-                {s.descripcion && <p className="mt-3 text-sm text-principal/70">{s.descripcion}</p>}
-                {s.contacto && (
-                  <p className="mt-3 text-xs text-principal/50">Contacto: {s.contacto}</p>
+              <div key={s.id} className="flex flex-col rounded-2xl border border-principal/10 overflow-hidden">
+                {(s as any).imagen && (
+                  <div className="relative aspect-video w-full">
+                    <Image src={(s as any).imagen} alt={s.nombre} fill className="object-cover" />
+                  </div>
                 )}
+                <div className="p-6">
+                  <p className="font-display text-xl">{s.nombre}</p>
+                  {s.area && <p className="mt-1 text-sm text-acento">{s.area}</p>}
+                  {s.descripcion && (
+                    <div className="mt-3 prose-voz text-sm text-principal/70" dangerouslySetInnerHTML={{ __html: s.descripcion }} />
+                  )}
+                  {s.contacto && <p className="mt-3 text-xs text-principal/50">Contacto: {s.contacto}</p>}
+                </div>
               </div>
             ))}
           </div>

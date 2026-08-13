@@ -15,7 +15,7 @@ export default async function Page({ params }: { params: { id: string; carreraId
   return (
     <div>
       <h1 className="font-display text-3xl">Editar carrera</h1>
-      <p className="mt-1 text-principal/60">{carrera.nombre} · {carrera.institucion.nombre}</p>
+      <p className="mt-1 text-principal/60">{carrera.nombre} - {carrera.institucion.nombre}</p>
       <form action={updateCarrera.bind(null, carrera.id)} className="mt-8 max-w-xl space-y-5">
         <div>
           <label className="text-sm font-medium">Nombre</label>

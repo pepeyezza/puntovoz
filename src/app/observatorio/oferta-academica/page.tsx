@@ -72,14 +72,12 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
             {filtradas.map((inst) => (
               <Link key={inst.id} href={`/observatorio/oferta-academica/${inst.slug}`}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-principal/8 bg-secundario/60 transition-all hover:border-principal/20 hover:bg-secundario">
-                {/* Imagen principal */}
                 {(inst as any).imagen && (
                   <div className="relative aspect-video w-full">
                     <Image src={(inst as any).imagen} alt={inst.nombre} fill className="object-cover" />
                   </div>
                 )}
                 <div className="flex flex-col flex-1 p-6">
-                  {/* Logo + nombre + tipo */}
                   <div className="flex items-start gap-3">
                     {inst.logoUrl ? (
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
@@ -97,13 +95,18 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
                           {TIPO_LABEL[inst.tipo] ?? inst.tipo}
                         </span>
                       </div>
-                      {inst.descripcion && <p className="mt-3 text-sm text-principal/60 leading-relaxed line-clamp-3">{inst.descripcion}</p>}
+                      {inst.descripcion && (
+                        <div className="mt-3 prose-voz text-sm text-principal/60 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: inst.descripcion }} />
+                      )}
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between">
                     <span className="text-xs text-principal/40">{inst._count.carreras} carrera(s)</span>
                     <span className="text-xs font-medium text-acento opacity-0 transition-opacity group-hover:opacity-100">Ver carreras →</span>
                   </div>
+                  {inst.web && (
+                    <p className="mt-2 text-xs text-principal/40 break-all">{inst.web}</p>
+                  )}
                 </div>
               </Link>
             ))}

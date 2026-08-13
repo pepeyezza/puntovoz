@@ -1,16 +1,35 @@
-function getYoutubeEmbedUrl(url: string) {
-  let videoId = "";
+function getEmbedUrl(url: string): string {
   try {
     const u = new URL(url);
-    if (u.hostname.includes("youtu.be")) {
-      videoId = u.pathname.slice(1);
-    } else if (u.pathname.includes("/embed/")) {
-      videoId = u.pathname.split("/embed/")[1];
-    } else {
-      videoId = u.searchParams.get("v") ?? "";
+
+    // Vimeo
+    if (u.hostname.includes("vimeo.com")) {
+      const id = u.pathname.split("/").filter(Boolean).pop();
+      return `https://player.vimeo.com/video/${id}`;
     }
-  } catch { videoId = ""; }
-  return `https://www.youtube.com/embed/${videoId}`;
+
+    // YouTube Shorts
+    if (u.pathname.includes("/shorts/")) {
+      const id = u.pathname.split("/shorts/")[1].split("?")[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+
+    // youtu.be
+    if (u.hostname.includes("youtu.be")) {
+      return `https://www.youtube.com/embed/${u.pathname.slice(1)}`;
+    }
+
+    // youtube.com/embed/
+    if (u.pathname.includes("/embed/")) {
+      return url;
+    }
+
+    // youtube.com/watch?v=
+    const v = u.searchParams.get("v");
+    if (v) return `https://www.youtube.com/embed/${v}`;
+
+  } catch {}
+  return url;
 }
 
 type VideoCardProps = {
@@ -25,7 +44,7 @@ export default function VideoCard({ title, description, youtubeUrl, date }: Vide
     <article className="overflow-hidden rounded-2xl bg-principal">
       <div className="aspect-video">
         <iframe
-          src={getYoutubeEmbedUrl(youtubeUrl)}
+          src={getEmbedUrl(youtubeUrl)}
           title={title}
           loading="lazy"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

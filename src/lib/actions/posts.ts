@@ -26,7 +26,7 @@ export async function createPost(formData: FormData) {
   const featured = formData.get("featured") === "on";
   const coverImage = String(formData.get("coverImage") || "") || null;
   const type = String(formData.get("type") || "EDITORIAL") as "EDITORIAL" | "COLABORADOR";
-  const slug = slugify(title);
+  const slug = slugify(title) + "-" + Date.now();
   const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
   const authorIdOverride = String(formData.get("authorId") || "");
   await prisma.post.create({

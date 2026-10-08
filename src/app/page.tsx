@@ -61,7 +61,7 @@ async function getHomeData() {
             coverImage: p.coverImage ?? undefined,
             featured: p.featured,
             author: p.author?.name ?? "Redacción .VOZ",
-          authorPhoto: p.author?.photoUrl ?? undefined,
+          authorPhoto: p.author?.photoUrl || undefined,
           }))
         : EDITORIALES_DEMO.slice(0, 3),
       audios: audios.length

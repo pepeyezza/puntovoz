@@ -81,7 +81,7 @@ export async function updatePost(id: string, formData: FormData) {
       featured,
       coverImage,
       publishedAt: status === "PUBLISHED" ? new Date() : null,
-      authorId: existing?.authorId || user.id,
+     authorId: String(formData.get("authorId") || "") || existing?.authorId || user.id,
     },
   });
   revalidatePath("/admin/editoriales");

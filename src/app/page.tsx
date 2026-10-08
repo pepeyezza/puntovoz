@@ -8,7 +8,7 @@ import AudioCard from "@/components/audio/AudioCard";
 import VideoCard from "@/components/video/VideoCard";
 import ObservatorioPreview from "@/components/observatorio/ObservatorioPreview";
 import Newsletter from "@/components/layout/Newsletter";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; 
 import { EDITORIALES_DEMO, AUDIOS_DEMO, VIDEOS_DEMO, INDICADORES_DEMO } from "@/lib/demo-data";
 import { CATEGORIAS_VOZ } from "@/lib/categorias";
 

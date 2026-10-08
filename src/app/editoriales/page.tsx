@@ -9,41 +9,33 @@ import { CATEGORIAS_VOZ } from "@/lib/categorias";
 
 export const metadata: Metadata = {
   title: "Editoriales",
-  description: "Artículos propios de .VOZ.",
+  description: "Articulos propios de .VOZ.",
 };
 
 async function getEditoriales() {
   try {
     const posts = await prisma.post.findMany({
-      where: {
-        status: "PUBLISHED",
-        // Muestra tanto editoriales propios como publicaciones de colaboradores
-        type: { in: ["EDITORIAL", "COLABORADOR"] },
-      },
-     orderBy: [{ orden: "asc" }, { publishedAt: "desc" }],
+      where: { status: "PUBLISHED", type: { in: ["EDITORIAL", "COLABORADOR"] } },
+      orderBy: [{ orden: "asc" }, { publishedAt: "desc" }],
       include: { categories: true, author: true },
     });
     if (posts.length === 0) return EDITORIALES_DEMO;
     return posts.map((p) => ({
-      slug: p.slug,
-      title: p.title,
-      subtitle: p.subtitle ?? "",
+      slug: p.slug, title: p.title, subtitle: p.subtitle ?? "",
       category: p.categories[0]?.name ?? "",
       date: (p.publishedAt ?? p.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
       coverImage: p.coverImage ?? undefined,
       featured: p.featured,
       author: p.author?.name ?? "",
+      authorPhoto: p.author?.photoUrl || undefined,
       isColaborador: p.type === "COLABORADOR",
     }));
-  } catch {
-    return EDITORIALES_DEMO;
-  }
+  } catch { return EDITORIALES_DEMO; }
 }
 
 export default async function EditorialesPage({ searchParams }: { searchParams: { categoria?: string } }) {
   const header = await getPageHeader("editoriales", {
-    eyebrow: "Editoriales",
-    title: "Artículos de .VOZ",
+    eyebrow: "Editoriales", title: "Articulos de .VOZ",
     description: "Producciones propias y voces colaboradoras.",
   });
   const categoriaActiva = searchParams.categoria ?? "Todas";
@@ -60,35 +52,26 @@ export default async function EditorialesPage({ searchParams }: { searchParams: 
 
       <div className="mt-8 flex flex-wrap gap-3">
         {["Todas", ...CATEGORIAS_VOZ].map((cat) => (
-          <a
-            key={cat}
+          <a key={cat}
             href={cat === "Todas" ? "/editoriales" : `/editoriales?categoria=${encodeURIComponent(cat)}`}
             className={`rounded-lg border px-5 py-2 text-sm font-medium transition-colors ${
-              categoriaActiva === cat
-                ? "border-acento bg-acento text-secundario"
-                : "border-principal/15 hover:border-acento hover:text-acento"
-            }`}
-          >
+              categoriaActiva === cat ? "border-acento bg-acento text-secundario" : "border-principal/15 hover:border-acento hover:text-acento"
+            }`}>
             {cat}
           </a>
         ))}
       </div>
 
       {editoriales.length === 0 ? (
-        <p className="mt-12 text-principal/60">No hay publicaciones en esta categoría.</p>
+        <p className="mt-12 text-principal/60">No hay publicaciones en esta categoria.</p>
       ) : (
         <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {editoriales.map((e) => (
-            <ArticleCard
-              key={e.slug}
-              slug={e.slug}
-              title={e.title}
-              subtitle={e.subtitle}
-              category={e.category}
-              date={e.date}
-              coverImage={e.coverImage}
+            <ArticleCard key={e.slug} slug={e.slug} title={e.title} subtitle={e.subtitle}
+              category={e.category} date={e.date} coverImage={e.coverImage}
               featured={(e as any).featured}
-              author={(e as any).isColaborador ? (e as any).author : undefined}
+              author={(e as any).author || undefined}
+              authorPhoto={(e as any).authorPhoto}
             />
           ))}
         </div>

@@ -25,6 +25,7 @@ async function getEditorial(slug: string) {
         category: post.categories[0]?.name ?? "",
         tags: post.tags.map((t) => t.name),
         author: post.author?.name ?? "Redacción .VOZ",
+authorPhoto: post.author?.photoUrl ?? null,
         authorId: post.author?.id ?? null,
         date: (post.publishedAt ?? post.createdAt).toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" }),
         coverImage: post.coverImage ?? "",
@@ -90,9 +91,15 @@ export default async function EditorialDetailPage({ params }: Props) {
             </Link>
           ) : (
             <div className="flex items-center gap-2">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-principal/10 text-xs font-bold text-principal/60">
-                {editorial.author.charAt(0)}
-              </span>
+            {editorial.authorPhoto ? (
+                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-principal/10">
+                  <Image src={editorial.authorPhoto} alt={editorial.author} fill className="object-cover" />
+                </div>
+              ) : (
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acento">
+                  {editorial.author.charAt(0)}
+                </span>
+              )}
               <span className="text-sm font-medium text-principal/70">{editorial.author}</span>
             </div>
           )}

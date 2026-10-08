@@ -84,9 +84,15 @@ export default async function EditorialDetailPage({ params }: Props) {
         <div className="mt-6 flex items-center gap-3">
           {editorial.authorId ? (
             <Link href={`/colaboradores/${editorial.authorId}`} className="flex items-center gap-2 hover:text-acento transition-colors">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acento">
-                {editorial.author.charAt(0)}
-              </span>
+              {editorial.authorPhoto ? (
+                <div className="relative h-8 w-8 overflow-hidden rounded-full border border-principal/10">
+                  <Image src={editorial.authorPhoto} alt={editorial.author} fill className="object-cover" />
+                </div>
+              ) : (
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-acento/10 text-xs font-bold text-acento">
+                  {editorial.author.charAt(0)}
+                </span>
+              )}
               <span className="text-sm font-medium">{editorial.author}</span>
             </Link>
           ) : (

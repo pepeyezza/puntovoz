@@ -1,26 +1,25 @@
 export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
-import Image from "next/image";
 import { FolderKanban } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
-import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
+import { Strip, Panel, DonutChart, BarList, FiltroChips, Ficha, contar } from "@/components/observatorio/TableroUi";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = { title: "Iniciativas - Data" };
 
-function tipoLabel(tipo: string) {
-  const map: Record<string, string> = {
-    publico: "Público", privado: "Privado", mixto: "Mixto",
-    comunitario: "Comunitario", internacional: "Internacional",
-  };
-  return map[tipo] ?? tipo;
-}
+const TIPO_LABEL: Record<string, string> = {
+  publico: "Público",
+  privado: "Privado",
+  mixto: "Mixto",
+  comunitario: "Comunitario",
+  internacional: "Internacional",
+};
 
-const TIPO_COLOR: Record<string, string> = {
-  Público: "bg-joven/20 text-principal",
+const TIPO_CLASE: Record<string, string> = {
+  Público: "bg-joven/25 text-principal",
   Privado: "bg-acento/15 text-acento",
-  Mixto: "bg-principal/10 text-principal/60",
+  Mixto: "bg-principal/10 text-principal/70",
   Comunitario: "bg-[#d8f3dc] text-[#2d6a4f]",
   Internacional: "bg-[#ede9fe] text-[#6d28d9]",
 };
@@ -29,91 +28,98 @@ const TIPOS = ["Todos", "Público", "Privado", "Mixto", "Comunitario", "Internac
 
 async function getIniciativas() {
   try {
-    const p = await prisma.proyectoLocal.findMany({ orderBy: [{ orden: "asc" }, { createdAt: "desc" }] });
-    return p.map((p) => ({
-      id: p.id, nombre: p.nombre, area: p.area ?? "",
-      tipo: tipoLabel(p.tipo), descripcion: p.descripcion,
-      enlace: p.enlace ?? "",
-      imagen: (p as any).imagen ?? "",
-      logoUrl: (p as any).logoUrl ?? "",
+    const lista = await prisma.proyectoLocal.findMany({ orderBy: [{ orden: "asc" }, { createdAt: "desc" }] });
+    return lista.map((p: any) => ({
+      id: p.id as string,
+      nombre: p.nombre as string,
+      area: (p.area ?? "") as string,
+      tipo: (TIPO_LABEL[p.tipo] ?? p.tipo) as string,
+      descripcion: (p.descripcion ?? "") as string,
+      enlace: (p.enlace ?? "") as string,
+      imagen: (p.imagen ?? "") as string,
+      logoUrl: (p.logoUrl ?? "") as string,
     }));
-  } catch { return []; }
+  } catch {
+    return [];
+  }
 }
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
   const header = await getPageHeader("dataProyectos", {
-    eyebrow: "Data", title: "Iniciativas",
+    eyebrow: "Data",
+    title: "Iniciativas",
     description: "Proyectos e iniciativas públicas, privadas y comunitarias del partido.",
   });
   const tipoActivo = searchParams.tipo ?? "Todos";
-  const todos = await getIniciativas();
-  const iniciativas = tipoActivo === "Todos" ? todos : todos.filter((p) => p.tipo === tipoActivo);
+  const todas = await getIniciativas();
+  const iniciativas = tipoActivo === "Todos" ? todas : todas.filter((p) => p.tipo === tipoActivo);
+
+  const cuenta = (t: string) => todas.filter((p) => p.tipo === t).length;
+  const otras = todas.length - cuenta("Público") - cuenta("Privado") - cuenta("Mixto");
+  const porTipo = contar(todas, (p) => p.tipo);
+  const porArea = contar(todas, (p) => p.area || "Sin área").slice(0, 6);
 
   return (
-    <DataSeccionWrapper seccion="/observatorio/proyectos">
-      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
-        <p className="eyebrow text-acento">{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/proyectos" /></div>
-        <div className="mt-6 flex items-center gap-3">
-          <FolderKanban size={32} className="text-acento" />
-          <h1 className="font-display text-4xl">Iniciativas</h1>
-        </div>
-        {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
+    <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+      <p className="eyebrow text-acento">{header.eyebrow}</p>
+      <div className="mt-3">
+        <ObservatorioNav active="/observatorio/proyectos" />
+      </div>
+      <div className="mt-6 flex items-center gap-3">
+        <FolderKanban size={32} className="text-acento" />
+        <h1 className="font-display text-4xl">Iniciativas</h1>
+      </div>
+      {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {TIPOS.map((tipo) => (
-            <a key={tipo}
-              href={tipo === "Todos" ? "/observatorio/proyectos" : `/observatorio/proyectos?tipo=${encodeURIComponent(tipo)}`}
-              className={`rounded-lg border px-4 py-1.5 text-xs font-medium transition-colors ${
-                tipoActivo === tipo ? "border-acento bg-acento text-secundario" : "border-principal/15 hover:border-acento hover:text-acento"
-              }`}>
-              {tipo}
-            </a>
+      {todas.length > 0 && (
+        <>
+          <div className="mt-8">
+            <Strip
+              label="Resumen"
+              tone="acento"
+              items={[
+                { label: "Total", value: String(todas.length) },
+                { label: "Públicas", value: String(cuenta("Público")) },
+                { label: "Privadas", value: String(cuenta("Privado")) },
+                { label: "Mixtas", value: String(cuenta("Mixto")) },
+                { label: "Otras", value: String(otras) },
+              ]}
+            />
+          </div>
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <Panel title="Por tipo">
+              <DonutChart data={porTipo} />
+            </Panel>
+            <Panel title="Por área">
+              <BarList data={porArea} />
+            </Panel>
+          </div>
+        </>
+      )}
+
+      <div className="mt-6">
+        <FiltroChips opciones={TIPOS} activa={tipoActivo} base="/observatorio/proyectos" tone="acento" />
+      </div>
+
+      {iniciativas.length === 0 ? (
+        <p className="mt-10 text-principal/50">Todavía no hay iniciativas cargadas.</p>
+      ) : (
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
+          {iniciativas.map((p) => (
+            <Ficha
+              key={p.id}
+              imagen={p.imagen || null}
+              logo={p.logoUrl || null}
+              nombre={p.nombre}
+              subtitulo={p.area || null}
+              etiqueta={p.tipo}
+              etiquetaClase={TIPO_CLASE[p.tipo]}
+              descripcionHtml={p.descripcion || null}
+              url={p.enlace || null}
+            />
           ))}
         </div>
-
-        {iniciativas.length === 0 ? (
-          <p className="mt-10 text-principal/50">Todavía no hay iniciativas cargadas.</p>
-        ) : (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
-            {iniciativas.map((p) => (
-              <div key={p.id} className="flex flex-col rounded-2xl bg-secundario/60 overflow-hidden border border-principal/8">
-                {p.imagen && (
-                  <div className="relative aspect-video w-full">
-                    <Image src={p.imagen} alt={p.nombre} fill className="object-cover" />
-                  </div>
-                )}
-                <div className="flex flex-col flex-1 p-6">
-                  <div className="flex items-start gap-3">
-                    {p.logoUrl && (
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
-                        <Image src={p.logoUrl} alt={p.nombre} fill className="object-contain p-1" />
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="font-display text-xl leading-snug">{p.nombre}</p>
-                        <span className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold ${TIPO_COLOR[p.tipo] ?? "bg-principal/10 text-principal/60"}`}>
-                          {p.tipo}
-                        </span>
-                      </div>
-                      {p.area && <p className="mt-0.5 text-sm text-principal/50">{p.area}</p>}
-                    </div>
-                  </div>
-                  {p.descripcion && (
-                    <div className="mt-3 flex-1 prose-voz text-sm text-principal/65 leading-relaxed" dangerouslySetInnerHTML={{ __html: p.descripcion }} />
-                  )}
-                  {p.enlace && (
-                    <div className="mt-4">
-                      <a href={p.enlace} target="_blank" rel="noreferrer" className="text-xs text-principal/40 hover:text-acento break-all">{p.enlace}</a>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-    </DataSeccionWrapper>
+      )}
+    </section>
   );
 }

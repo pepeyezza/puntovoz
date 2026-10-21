@@ -1,118 +1,131 @@
 export const dynamic = "force-dynamic";
 import type { Metadata } from "next";
-import Link from "next/link";
-import Image from "next/image";
 import { GraduationCap } from "lucide-react";
 import ObservatorioNav from "@/components/observatorio/ObservatorioNav";
-import DataSeccionWrapper from "@/components/observatorio/DataSeccionWrapper";
+import { Strip, Panel, DonutChart, BarList, FiltroChips, Ficha, contar } from "@/components/observatorio/TableroUi";
 import { getPageHeader } from "@/lib/utils";
 import { prisma } from "@/lib/prisma";
 
-export const metadata: Metadata = { title: "Oferta Academica - Data" };
+export const metadata: Metadata = { title: "Oferta académica - Data" };
 
 const TIPO_LABEL: Record<string, string> = {
-  universidad: "Universidad", instituto: "Instituto",
-  formacion_laboral: "Centro de formacion", otro: "Otro",
+  universidad: "Universidad",
+  instituto: "Instituto",
+  formacion_laboral: "Centro de formación",
+  otro: "Otro",
 };
-const TIPO_COLOR: Record<string, string> = {
-  universidad: "bg-joven/20 text-principal",
-  instituto: "bg-acento/15 text-acento",
-  formacion_laboral: "bg-principal/10 text-principal/60",
-  otro: "bg-principal/5 text-principal/50",
-};
-const TIPOS = ["Todas", "Universidad", "Instituto", "Centro de formacion", "Otro"];
 
-async function get() {
+const TIPO_CLASE: Record<string, string> = {
+  universidad: "bg-joven/25 text-principal",
+  instituto: "bg-acento/15 text-acento",
+  formacion_laboral: "bg-principal/10 text-principal/70",
+  otro: "bg-principal/5 text-principal/60",
+};
+
+const MODALIDAD_LABEL: Record<string, string> = {
+  presencial: "Presencial",
+  virtual: "Virtual",
+  mixta: "Mixta",
+};
+
+const TIPOS = ["Todas", "Universidad", "Instituto", "Centro de formación", "Otro"];
+
+async function getInstituciones() {
   try {
-    return await prisma.institucionAcademica.findMany({
+    return (await prisma.institucionAcademica.findMany({
       orderBy: { nombre: "asc" },
-      include: { _count: { select: { carreras: true } } },
-    });
-  } catch { return []; }
+      include: { carreras: { select: { modalidad: true, area: true } } },
+    })) as any[];
+  } catch {
+    return [] as any[];
+  }
 }
 
 export default async function Page({ searchParams }: { searchParams: { tipo?: string } }) {
   const header = await getPageHeader("dataOfertaAcademica", {
-    eyebrow: "Data", title: "Oferta academica",
-    description: "Instituciones educativas, institutos y centros de formacion en Chascomus.",
+    eyebrow: "Data",
+    title: "Oferta académica",
+    description: "Instituciones educativas, institutos y centros de formación en Chascomús.",
   });
-  const instituciones = await get();
+  const instituciones = await getInstituciones();
   const tipoActivo = searchParams.tipo ?? "Todas";
-  const filtradas = tipoActivo === "Todas"
-    ? instituciones
-    : instituciones.filter((i) => TIPO_LABEL[i.tipo] === tipoActivo);
+  const filtradas =
+    tipoActivo === "Todas" ? instituciones : instituciones.filter((i: any) => TIPO_LABEL[i.tipo] === tipoActivo);
+
+  const carreras: any[] = instituciones.flatMap((i: any) => i.carreras);
+  const presenciales = carreras.filter((c: any) => c.modalidad === "presencial").length;
+  const porArea = contar(carreras, (c: any) => c.area || "Sin área").slice(0, 6);
+  const porModalidad = contar(carreras, (c: any) => MODALIDAD_LABEL[c.modalidad] ?? c.modalidad);
 
   return (
-    <DataSeccionWrapper seccion="/observatorio/oferta-academica">
-      <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
-        <p className="eyebrow text-principal/60">{header.eyebrow}</p>
-        <div className="mt-3"><ObservatorioNav active="/observatorio/oferta-academica" /></div>
-        <div className="mt-6 flex items-center gap-3">
-          <GraduationCap size={32} className="text-principal/70" />
-          <h1 className="font-display text-4xl">{header.title}</h1>
-        </div>
-        {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
+    <section className="mx-auto max-w-editorial px-5 py-12 lg:px-8">
+      <p className="eyebrow text-acento">{header.eyebrow}</p>
+      <div className="mt-3">
+        <ObservatorioNav active="/observatorio/oferta-academica" />
+      </div>
+      <div className="mt-6 flex items-center gap-3">
+        <GraduationCap size={32} className="text-principal/70" />
+        <h1 className="font-display text-4xl">Oferta académica</h1>
+      </div>
+      {header.description && <p className="mt-3 text-principal/70">{header.description}</p>}
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {TIPOS.map((tipo) => (
-            <a key={tipo}
-              href={tipo === "Todas" ? "/observatorio/oferta-academica" : `/observatorio/oferta-academica?tipo=${encodeURIComponent(tipo)}`}
-              className={`rounded-lg border px-4 py-1.5 text-xs font-medium transition-colors ${
-                tipoActivo === tipo ? "border-principal bg-principal text-secundario" : "border-principal/15 hover:border-principal hover:bg-principal/5"
-              }`}>
-              {tipo}
-            </a>
+      {instituciones.length > 0 && (
+        <>
+          <div className="mt-8">
+            <Strip
+              label="Resumen"
+              tone="joven"
+              items={[
+                { label: "Instituciones", value: String(instituciones.length) },
+                { label: "Carreras", value: String(carreras.length) },
+                { label: "Presenciales", value: String(presenciales) },
+                { label: "Virtuales y mixtas", value: String(carreras.length - presenciales) },
+              ]}
+            />
+          </div>
+          <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <Panel title="Carreras por área">
+              <BarList data={porArea} />
+            </Panel>
+            <Panel title="Modalidad">
+              <DonutChart data={porModalidad} />
+            </Panel>
+          </div>
+        </>
+      )}
+
+      <div className="mt-6">
+        <FiltroChips opciones={TIPOS} activa={tipoActivo} base="/observatorio/oferta-academica" tone="principal" />
+      </div>
+
+      {filtradas.length === 0 ? (
+        <p className="mt-10 text-principal/50">Todavía no hay instituciones cargadas.</p>
+      ) : (
+        <div className="mt-6 grid gap-5 sm:grid-cols-2">
+          {filtradas.map((inst: any) => (
+            <Ficha
+              key={inst.id}
+              href={`/observatorio/oferta-academica/${inst.slug}`}
+              imagen={inst.imagen || null}
+              logo={inst.logoUrl || null}
+              nombre={inst.nombre}
+              etiqueta={TIPO_LABEL[inst.tipo] ?? inst.tipo}
+              etiquetaClase={TIPO_CLASE[inst.tipo]}
+              descripcionHtml={inst.descripcion || null}
+              url={inst.web || null}
+              clamp
+              pie={
+                <div className="flex items-center justify-between">
+                  <span className="rounded-md bg-principal/5 px-2 py-0.5 text-xs text-principal/70">
+                    {inst.carreras.length} carrera(s)
+                  </span>
+                  <span className="text-xs font-medium text-acento">Ver carreras →</span>
+                </div>
+              }
+            />
           ))}
         </div>
-
-        {filtradas.length === 0 ? (
-          <p className="mt-12 text-principal/50">Todavia no hay instituciones cargadas.</p>
-        ) : (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2">
-            {filtradas.map((inst) => (
-              <Link key={inst.id} href={`/observatorio/oferta-academica/${inst.slug}`}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-principal/8 bg-secundario/60 transition-all hover:border-principal/20 hover:bg-secundario">
-                {(inst as any).imagen && (
-                  <div className="relative aspect-video w-full">
-                    <Image src={(inst as any).imagen} alt={inst.nombre} fill className="object-cover" />
-                  </div>
-                )}
-                <div className="flex flex-col flex-1 p-6">
-                  <div className="flex items-start gap-3">
-                    {inst.logoUrl ? (
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white">
-                        <Image src={inst.logoUrl} alt={inst.nombre} fill className="object-contain p-1" />
-                      </div>
-                    ) : (
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-joven/20 font-display text-lg font-medium text-principal/40">
-                        {inst.nombre.charAt(0)}
-                      </div>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="font-display text-xl leading-snug">{inst.nombre}</p>
-                        <span className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold ${TIPO_COLOR[inst.tipo] ?? "bg-principal/5 text-principal/50"}`}>
-                          {TIPO_LABEL[inst.tipo] ?? inst.tipo}
-                        </span>
-                      </div>
-                      {inst.descripcion && (
-                        <div className="mt-3 prose-voz text-sm text-principal/60 leading-relaxed line-clamp-3" dangerouslySetInnerHTML={{ __html: inst.descripcion }} />
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="text-xs text-principal/40">{inst._count.carreras} carrera(s)</span>
-                    <span className="text-xs font-medium text-acento opacity-0 transition-opacity group-hover:opacity-100">Ver carreras →</span>
-                  </div>
-                  {inst.web && (
-                    <p className="mt-2 text-xs text-principal/40 break-all">{inst.web}</p>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
-    </DataSeccionWrapper>
+      )}
+    </section>
   );
 }

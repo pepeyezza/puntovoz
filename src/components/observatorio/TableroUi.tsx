@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 export type Tone = "acento" | "joven" | "principal";
@@ -172,5 +173,135 @@ export function SectionTile({ title, href, tone, icon, meta, children }: TilePro
         Ver todo →
       </Link>
     </div>
+  );
+}
+
+/** Logo cuadrado o, si no hay, la inicial del nombre. */
+export function Avatar({ src, name, size = "sm" }: { src?: string | null; name: string; size?: "sm" | "md" }) {
+  const medida = size === "md" ? "h-10 w-10" : "h-8 w-8";
+  if (src) {
+    return (
+      <div className={`relative shrink-0 overflow-hidden rounded-lg border border-principal/10 bg-white ${medida}`}>
+        <Image src={src} alt={name} fill className="object-contain p-1" />
+      </div>
+    );
+  }
+  return (
+    <span className={`flex shrink-0 items-center justify-center rounded-lg bg-principal/10 text-sm font-medium text-principal/50 ${medida}`}>
+      {name.charAt(0)}
+    </span>
+  );
+}
+
+/** Filtros por tipo. La primera opción ("Todos"/"Todas") quita el filtro. */
+export function FiltroChips({
+  opciones,
+  activa,
+  base,
+  tone = "acento",
+}: {
+  opciones: string[];
+  activa: string;
+  base: string;
+  tone?: "acento" | "principal";
+}) {
+  const on = tone === "acento" ? "border-acento bg-acento text-secundario" : "border-principal bg-principal text-secundario";
+  return (
+    <div className="flex flex-wrap gap-2">
+      {opciones.map((op, i) => (
+        <a
+          key={op}
+          href={i === 0 ? base : `${base}?tipo=${encodeURIComponent(op)}`}
+          className={`rounded-lg border px-4 py-1.5 text-xs font-medium transition-colors ${
+            activa === op ? on : "border-principal/20 hover:border-principal/50"
+          }`}
+        >
+          {op}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+type FichaProps = {
+  href?: string;
+  imagen?: string | null;
+  logo?: string | null;
+  nombre: string;
+  subtitulo?: string | null;
+  etiqueta?: string;
+  etiquetaClase?: string;
+  descripcionHtml?: string | null;
+  url?: string | null;
+  pie?: ReactNode;
+  clamp?: boolean;
+};
+
+/** Ficha con imagen, logo, etiqueta, descripción enriquecida y URL visible. */
+export function Ficha({
+  href,
+  imagen,
+  logo,
+  nombre,
+  subtitulo,
+  etiqueta,
+  etiquetaClase,
+  descripcionHtml,
+  url,
+  pie,
+  clamp,
+}: FichaProps) {
+  const contenido = (
+    <>
+      {imagen && (
+        <div className="relative aspect-video w-full">
+          <Image src={imagen} alt={nombre} fill className="object-cover" />
+        </div>
+      )}
+      <div className="flex flex-1 flex-col p-5">
+        <div className="flex items-start gap-3">
+          <Avatar src={logo} name={nombre} size="md" />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <p className="font-display text-lg leading-snug">{nombre}</p>
+              {etiqueta && (
+                <span
+                  className={`shrink-0 rounded-md px-2 py-0.5 text-xs font-medium ${
+                    etiquetaClase ?? "bg-principal/10 text-principal/70"
+                  }`}
+                >
+                  {etiqueta}
+                </span>
+              )}
+            </div>
+            {subtitulo && <p className="mt-0.5 text-xs text-principal/50">{subtitulo}</p>}
+          </div>
+        </div>
+        {descripcionHtml && (
+          <div
+            className={`prose-voz mt-3 text-sm leading-relaxed text-principal/65 ${clamp ? "line-clamp-3" : ""}`}
+            dangerouslySetInnerHTML={{ __html: descripcionHtml }}
+          />
+        )}
+        {url &&
+          (href ? (
+            <p className="mt-3 break-all text-xs text-acento">{url}</p>
+          ) : (
+            <a href={url} target="_blank" rel="noreferrer" className="mt-3 break-all text-xs text-acento hover:underline">
+              {url}
+            </a>
+          ))}
+        {pie && <div className="mt-auto pt-4">{pie}</div>}
+      </div>
+    </>
+  );
+
+  const clases = "group flex flex-col overflow-hidden rounded-2xl bg-white transition-shadow hover:shadow-sm";
+  return href ? (
+    <Link href={href} className={clases}>
+      {contenido}
+    </Link>
+  ) : (
+    <div className={clases}>{contenido}</div>
   );
 }

@@ -16,23 +16,30 @@ type Indicador = {
 
 type Props = { indicadores: Indicador[] };
 
+const COLORES = ["#1c2a38", "#c87a62", "#f4a900", "#cfc8b8", "#7a8794", "#e3b9a9"];
+
+function colorDe(categoria: string | null) {
+  const i = categoria ? (CATEGORIAS_INDICADORES as readonly string[]).indexOf(categoria) : -1;
+  return COLORES[i >= 0 ? i % COLORES.length : 3];
+}
+
 export default function IndicadoresClient({ indicadores }: Props) {
   const [query, setQuery] = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState("Todas");
 
   const filtrados = useMemo(() => {
+    const q = query.trim().toLowerCase();
     return indicadores.filter((ind) => {
       const coincideCategoria = categoriaActiva === "Todas" || ind.categoria === categoriaActiva;
       const coincideQuery =
-        query.trim() === "" ||
-        ind.nombre.toLowerCase().includes(query.toLowerCase()) ||
-        (ind.categoria ?? "").toLowerCase().includes(query.toLowerCase()) ||
-        (ind.fuente ?? "").toLowerCase().includes(query.toLowerCase());
+        q === "" ||
+        ind.nombre.toLowerCase().includes(q) ||
+        (ind.categoria ?? "").toLowerCase().includes(q) ||
+        (ind.fuente ?? "").toLowerCase().includes(q);
       return coincideCategoria && coincideQuery;
     });
   }, [indicadores, query, categoriaActiva]);
 
-  // Agrupar por categoría para mostrarlos organizados
   const porCategoria = useMemo(() => {
     const grupos: Record<string, Indicador[]> = {};
     filtrados.forEach((ind) => {
@@ -46,17 +53,15 @@ export default function IndicadoresClient({ indicadores }: Props) {
   return (
     <>
       {/* Buscador */}
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="relative flex-1 sm:max-w-sm">
-          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-secundario/40" />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar indicador..."
-            className="w-full rounded-full border border-secundario/20 bg-secundario/10 py-2.5 pl-10 pr-5 text-sm text-secundario outline-none placeholder:text-secundario/40 focus-visible:border-joven"
-          />
-        </div>
+      <div className="mt-8 relative max-w-sm">
+        <Search size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-principal/40" />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Buscar indicador..."
+          className="w-full rounded-lg border border-principal/20 bg-white py-2.5 pl-10 pr-5 text-sm outline-none placeholder:text-principal/40 focus-visible:border-principal"
+        />
       </div>
 
       {/* Filtros por categoría */}
@@ -65,10 +70,10 @@ export default function IndicadoresClient({ indicadores }: Props) {
           <button
             key={cat}
             onClick={() => setCategoriaActiva(cat)}
-            className={`rounded-full border px-4 py-1.5 text-xs font-medium transition-colors ${
+            className={`rounded-lg border px-4 py-1.5 text-xs font-medium transition-colors ${
               categoriaActiva === cat
-                ? "border-joven bg-joven text-principal"
-                : "border-secundario/20 text-secundario/60 hover:border-joven hover:text-joven"
+                ? "border-principal bg-principal text-secundario"
+                : "border-principal/20 hover:border-principal/50"
             }`}
           >
             {cat}
@@ -78,21 +83,19 @@ export default function IndicadoresClient({ indicadores }: Props) {
 
       {/* Resultados */}
       {filtrados.length === 0 ? (
-        <p className="mt-10 text-secundario/50">No encontramos indicadores que coincidan.</p>
+        <p className="mt-10 text-principal/50">No encontramos indicadores que coincidan.</p>
       ) : categoriaActiva !== "Todas" ? (
-        // Vista plana cuando hay filtro activo
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {filtrados.map((ind) => (
             <IndicadorCard key={ind.id} ind={ind} />
           ))}
         </div>
       ) : (
-        // Vista agrupada por categoría
-        <div className="mt-8 space-y-10">
+        <div className="mt-6 space-y-8">
           {Object.entries(porCategoria).map(([cat, items]) => (
             <div key={cat}>
-              <h3 className="font-display text-lg text-secundario/70">{cat}</h3>
-              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <h3 className="font-display text-lg text-principal/70">{cat}</h3>
+              <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {items.map((ind) => (
                   <IndicadorCard key={ind.id} ind={ind} />
                 ))}
@@ -107,15 +110,18 @@ export default function IndicadoresClient({ indicadores }: Props) {
 
 function IndicadorCard({ ind }: { ind: Indicador }) {
   return (
-    <div className="rounded-2xl border border-secundario/15 p-5">
-      <p className="text-xs text-secundario/50">{ind.categoria}</p>
-      <p className="mt-2 text-sm text-secundario/70">{ind.nombre}</p>
-      <p className="mt-2 font-display text-3xl text-joven">
-        {ind.valor}
-        <span className="ml-1 text-base text-secundario/50">{ind.unidad}</span>
+    <div
+      className="rounded-2xl border-t-4 border-transparent bg-white p-5"
+      style={{ borderTopColor: colorDe(ind.categoria) }}
+    >
+      <p className="text-xs text-principal/50">{ind.categoria ?? "Sin categoría"}</p>
+      <p className="mt-2 text-sm text-principal/70">{ind.nombre}</p>
+      <p className="mt-2 font-display text-3xl">
+        {ind.valor.toLocaleString("es-AR")}
+        <span className="ml-1 text-base text-principal/50">{ind.unidad}</span>
       </p>
-      <p className="mt-1 text-xs text-secundario/40">{ind.periodo}</p>
-      {ind.fuente && <p className="mt-2 text-xs text-secundario/30">Fuente: {ind.fuente}</p>}
+      <p className="mt-1 text-xs text-principal/40">{ind.periodo}</p>
+      {ind.fuente && <p className="mt-2 text-xs text-principal/40">Fuente: {ind.fuente}</p>}
     </div>
   );
 }

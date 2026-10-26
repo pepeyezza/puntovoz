@@ -24,6 +24,12 @@ const TIPO_CLASE: Record<string, string> = {
   Internacional: "bg-[#ede9fe] text-[#6d28d9]",
 };
 
+const ESTADO_LABEL: Record<string, string> = {
+  en_curso: "En curso",
+  planificada: "Planificada",
+  finalizada: "Finalizada",
+};
+
 const TIPOS = ["Todos", "Público", "Privado", "Mixto", "Comunitario", "Internacional"];
 
 async function getIniciativas() {
@@ -31,6 +37,8 @@ async function getIniciativas() {
     const lista = await prisma.proyectoLocal.findMany({ orderBy: [{ orden: "asc" }, { createdAt: "desc" }] });
     return lista.map((p: any) => ({
       id: p.id as string,
+      slug: p.slug as string,
+      estado: (p.estado ?? "") as string,
       nombre: p.nombre as string,
       area: (p.area ?? "") as string,
       tipo: (TIPO_LABEL[p.tipo] ?? p.tipo) as string,
@@ -108,6 +116,7 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
           {iniciativas.map((p) => (
             <Ficha
               key={p.id}
+              href={`/observatorio/proyectos/${p.slug}`}
               imagen={p.imagen || null}
               logo={p.logoUrl || null}
               nombre={p.nombre}
@@ -116,6 +125,18 @@ export default async function Page({ searchParams }: { searchParams: { tipo?: st
               etiquetaClase={TIPO_CLASE[p.tipo]}
               descripcionHtml={p.descripcion || null}
               url={p.enlace || null}
+              pie={
+                <div className="flex items-center justify-between">
+                  {p.estado ? (
+                    <span className="rounded-md bg-principal/5 px-2 py-0.5 text-xs text-principal/70">
+                      {ESTADO_LABEL[p.estado] ?? p.estado}
+                    </span>
+                  ) : (
+                    <span />
+                  )}
+                  <span className="text-xs font-medium text-acento">Ver ficha completa →</span>
+                </div>
+              }
             />
           ))}
         </div>

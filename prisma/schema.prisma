@@ -143,7 +143,16 @@ orden       Int        @default(0)
   coverImage  String?
   createdAt   DateTime @default(now())
 logoUrl String?
-
+  estado          String?
+  responsable     String?
+  periodo         String?
+  ubicacion       String?
+  destinatarios   String?
+  detalle         String?
+  cifras          String?
+  galeria         String[] @default([])
+  documentoUrl    String?
+  documentoTitulo String?
 }
 
 model EventoAgenda {
